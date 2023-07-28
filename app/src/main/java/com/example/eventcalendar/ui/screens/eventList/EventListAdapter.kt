@@ -1,20 +1,50 @@
 package com.example.eventcalendar.ui.screens.eventList
 
-import android.os.Bundle
-import androidx.fragment.app.Fragment
-import androidx.viewpager2.adapter.FragmentStateAdapter
-import com.example.eventcalendar.utils.constants.eventTypeKey
+import android.content.Context
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import android.widget.TextView
+import androidx.recyclerview.widget.RecyclerView
+import com.example.eventcalendar.R
+import com.example.eventcalendar.databinding.ItemEventBinding
+import com.example.eventcalendar.model.domain.EventDomain
+import java.util.Calendar
 
-class EventListAdapter(fragment: Fragment): FragmentStateAdapter(fragment) {
-    private val screensCount = 3
+class EventListAdapter(
+    private val eventList: List<EventDomain>,
+    private val context: Context
+): RecyclerView.Adapter<EventListAdapter.ViewHolder>() {
 
-    override fun getItemCount(): Int = screensCount
+    class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
+        val titleText: TextView
+        val temperatureText: TextView
+        val cityText: TextView
+        val dateText: TextView
 
-    override fun createFragment(position: Int): Fragment {
-        val fragment = EventFragment()
-        val bundle = Bundle()
-        bundle.putInt(eventTypeKey, position)
-        return fragment
+        init {
+            titleText = view.findViewById(R.id.title_text)
+            temperatureText = view.findViewById(R.id.temperature_text)
+            cityText = view.findViewById(R.id.city_text)
+            dateText = view.findViewById(R.id.date_text)
+        }
+    }
+
+    override fun getItemCount() = eventList.size
+
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
+        val binding = ItemEventBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        return ViewHolder(binding.root)
+    }
+
+    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+        holder.titleText.text = eventList[position].title
+        holder.temperatureText.text = context.getString(
+            R.string.temperature,
+            eventList[position].weather.temp
+        )
+        holder.cityText.text = eventList[position].city.name
+        holder.dateText.text = eventList[position].date.get(Calendar.MONTH).toString()
     }
 
 }

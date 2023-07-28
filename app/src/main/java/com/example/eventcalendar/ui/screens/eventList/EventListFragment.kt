@@ -25,7 +25,7 @@ class EventListFragment: Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         val viewPager = binding.viewPager
-        viewPager.adapter = EventListAdapter(this)
+        viewPager.adapter = EventTypeListAdapter(this)
 
         val tabLayout = binding.tabLayout
         attachTabLayoutMediator(tabLayout = tabLayout, viewPager = viewPager)
