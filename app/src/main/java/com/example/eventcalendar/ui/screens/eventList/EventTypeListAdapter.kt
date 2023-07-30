@@ -14,6 +14,7 @@ class EventTypeListAdapter(fragment: Fragment): FragmentStateAdapter(fragment) {
         val fragment = EventTypeFragment()
         val bundle = Bundle()
         bundle.putInt(eventTypeKey, position)
+        fragment.arguments = bundle
         return fragment
     }
 

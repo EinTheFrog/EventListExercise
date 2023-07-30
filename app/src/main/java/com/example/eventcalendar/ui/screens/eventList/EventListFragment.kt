@@ -22,7 +22,6 @@ class EventListFragment: Fragment() {
         return binding.root
     }
 
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         val viewPager = binding.viewPager
         viewPager.adapter = EventTypeListAdapter(this)

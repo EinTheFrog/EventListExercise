@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.eventcalendar.R
 import com.example.eventcalendar.databinding.ItemEventBinding
 import com.example.eventcalendar.model.domain.EventDomain
+import com.example.eventcalendar.utils.extensions.toShortString
 import java.util.Calendar
 
 class EventListAdapter(
@@ -28,6 +29,7 @@ class EventListAdapter(
             cityText = view.findViewById(R.id.city_text)
             dateText = view.findViewById(R.id.date_text)
         }
+
     }
 
     override fun getItemCount() = eventList.size
@@ -44,7 +46,7 @@ class EventListAdapter(
             eventList[position].weather.temp
         )
         holder.cityText.text = eventList[position].city.name
-        holder.dateText.text = eventList[position].date.get(Calendar.MONTH).toString()
+        holder.dateText.text = eventList[position].date.toShortString()
     }
 
 }
