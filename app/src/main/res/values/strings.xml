@@ -6,4 +6,6 @@
     <string name="missed_event_title">Missed</string>
 
     <string name="temperature">%1$.2f°C</string>
+
+    <string name="create_event_button">Add new event</string>
 </resources>
