@@ -26,9 +26,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="12dp"
-        android:icon="@drawable/ic_launcher_foreground"
+        android:drawableLeft="@drawable/baseline_add_24"
+        android:drawableTint="?attr/colorOnPrimary"
         android:text="@string/create_event_button"
-        app:iconTint="#FFFFFF"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
