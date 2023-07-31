@@ -6,7 +6,9 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.viewpager2.widget.ViewPager2
+import com.example.eventcalendar.R
 import com.example.eventcalendar.databinding.FragmentEventListBinding
+import com.example.eventcalendar.model.EventType
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
 
@@ -28,11 +30,18 @@ class EventListFragment: Fragment() {
 
         val tabLayout = binding.tabLayout
         attachTabLayoutMediator(tabLayout = tabLayout, viewPager = viewPager)
+        initActionBar()
     }
 
     private fun attachTabLayoutMediator(tabLayout: TabLayout, viewPager: ViewPager2) {
         TabLayoutMediator(tabLayout, viewPager) { tab, position ->
-            tab.text = "Type $position"
+            tab.text = getString(EventType.getEventTypeById(position).titleResource)
         }.attach()
+    }
+
+    private fun initActionBar() {
+        val actionBar = activity?.actionBar ?: return
+        actionBar.title = getString(R.string.event_list_title)
+        actionBar.setHomeButtonEnabled(false)
     }
 }
