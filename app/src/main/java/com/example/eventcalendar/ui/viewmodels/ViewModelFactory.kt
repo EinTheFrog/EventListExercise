@@ -6,11 +6,13 @@ import javax.inject.Inject
 import javax.inject.Provider
 
 class ViewModelFactory @Inject constructor(
-    viewModelProvider: Provider<EventListViewModel>
+    eventListViewModelProvider: Provider<EventListViewModel>,
+    createEventViewModelProvider: Provider<CreateEventViewModel>
 ) : ViewModelProvider.Factory {
 
     private val providers = mapOf<Class<*>, Provider<out ViewModel>>(
-        EventListViewModel::class.java to viewModelProvider
+        EventListViewModel::class.java to eventListViewModelProvider,
+        CreateEventViewModel::class.java to createEventViewModelProvider
     )
 
     override fun <T : ViewModel> create(modelClass: Class<T>): T {

@@ -16,8 +16,6 @@ import androidx.viewpager2.widget.ViewPager2
 import com.example.eventcalendar.R
 import com.example.eventcalendar.databinding.FragmentEventListBinding
 import com.example.eventcalendar.model.EventType
-import com.example.eventcalendar.utils.extensions.attachActionBarMenuProvider
-import com.example.eventcalendar.utils.extensions.detachActionBarMenuProvider
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
 
@@ -50,12 +48,12 @@ class EventListFragment: Fragment() {
         val tabLayout = binding.tabLayout
         attachTabLayoutMediator(tabLayout = tabLayout, viewPager = viewPager)
         initActionBar()
-        attachActionBarMenuProvider(menuProvider)
+        activity?.addMenuProvider(menuProvider)
         initFab(binding.createEventButton)
     }
 
     override fun onDestroyView() {
-        detachActionBarMenuProvider(menuProvider)
+        activity?.removeMenuProvider(menuProvider)
         super.onDestroyView()
     }
 
