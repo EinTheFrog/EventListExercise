@@ -6,7 +6,11 @@
 
     <fragment
         android:id="@+id/eventListFragment"
-        android:name="com.example.eventcalendar.ui.screens.eventList.EventListFragment" />
+        android:name="com.example.eventcalendar.ui.screens.eventList.EventListFragment">
+        <action
+            android:id="@+id/action_eventListFragment_to_createEventFragment"
+            app:destination="@id/createEventFragment"/>
+    </fragment>
 
     <fragment
         android:id="@+id/createEventFragment"
