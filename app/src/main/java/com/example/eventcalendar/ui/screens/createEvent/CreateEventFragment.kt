@@ -14,8 +14,20 @@ import androidx.fragment.app.Fragment
 import com.example.eventcalendar.R
 import com.example.eventcalendar.databinding.FragmentCreateEventBinding
 import com.example.eventcalendar.ui.EventCalendarApplication
+import com.example.eventcalendar.utils.extensions.attachActionBarMenuProvider
+import com.example.eventcalendar.utils.extensions.detachActionBarMenuProvider
 
 class CreateEventFragment: Fragment() {
+    private val menuProvider = object: MenuProvider {
+        override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
+            menuInflater.inflate(R.menu.create_event, menu)
+        }
+
+        override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
+            return false
+        }
+    }
+
     override fun onAttach(context: Context) {
         activity?.let {
             (it.application as EventCalendarApplication).appComponent.inject(this)
@@ -35,6 +47,12 @@ class CreateEventFragment: Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         initActionBar()
+        attachActionBarMenuProvider(menuProvider)
+    }
+
+    override fun onDestroyView() {
+        detachActionBarMenuProvider(menuProvider)
+        super.onDestroyView()
     }
 
     private fun initActionBar() {
@@ -44,15 +62,5 @@ class CreateEventFragment: Fragment() {
         actionBar.title = getString(R.string.event_list_title)
         actionBar.setDisplayHomeAsUpEnabled(true)
         actionBar.setHomeAsUpIndicator(R.drawable.baseline_close_24)
-
-        appCompatActivity.addMenuProvider(object: MenuProvider {
-            override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
-                menuInflater.inflate(R.menu.create_event, menu)
-            }
-
-            override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
-                return false
-            }
-        })
     }
 }

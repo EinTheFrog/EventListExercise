@@ -16,11 +16,22 @@ import androidx.viewpager2.widget.ViewPager2
 import com.example.eventcalendar.R
 import com.example.eventcalendar.databinding.FragmentEventListBinding
 import com.example.eventcalendar.model.EventType
+import com.example.eventcalendar.utils.extensions.attachActionBarMenuProvider
+import com.example.eventcalendar.utils.extensions.detachActionBarMenuProvider
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
 
 class EventListFragment: Fragment() {
     private lateinit var binding: FragmentEventListBinding
+    private val menuProvider = object: MenuProvider {
+        override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
+            menuInflater.inflate(R.menu.event_list, menu)
+        }
+
+        override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
+            return false
+        }
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -39,7 +50,13 @@ class EventListFragment: Fragment() {
         val tabLayout = binding.tabLayout
         attachTabLayoutMediator(tabLayout = tabLayout, viewPager = viewPager)
         initActionBar()
+        attachActionBarMenuProvider(menuProvider)
         initFab(binding.createEventButton)
+    }
+
+    override fun onDestroyView() {
+        detachActionBarMenuProvider(menuProvider)
+        super.onDestroyView()
     }
 
     private fun attachTabLayoutMediator(tabLayout: TabLayout, viewPager: ViewPager2) {
@@ -54,16 +71,6 @@ class EventListFragment: Fragment() {
         val actionBar = appCompatActivity.supportActionBar ?: return
         actionBar.title = getString(R.string.event_list_title)
         actionBar.setDisplayHomeAsUpEnabled(false)
-
-        appCompatActivity.addMenuProvider(object: MenuProvider {
-            override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
-                menuInflater.inflate(R.menu.event_list, menu)
-            }
-
-            override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
-                return false
-            }
-        })
     }
 
     private fun initFab(fabButton: Button) {
