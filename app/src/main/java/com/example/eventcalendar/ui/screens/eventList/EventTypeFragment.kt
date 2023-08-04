@@ -10,6 +10,8 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import androidx.navigation.NavController
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.eventcalendar.databinding.FragmentEventTypeBinding
@@ -60,7 +62,10 @@ class EventTypeFragment: Fragment() {
     }
 
     private fun initRecyclerView(recyclerView: RecyclerView) {
-        adapter = EventListAdapter(eventList, requireContext())
+        adapter = EventListAdapter(eventList, requireContext()) { eventId ->
+            val action = EventListFragmentDirections.actionEventListFragmentToEventInfoFragment(eventId)
+            findNavController().navigate(action)
+        }
         recyclerView.adapter = adapter
         val layoutManager = GridLayoutManager(requireContext(), 2)
         recyclerView.layoutManager = layoutManager

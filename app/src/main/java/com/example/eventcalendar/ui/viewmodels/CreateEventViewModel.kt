@@ -151,6 +151,7 @@ class CreateEventViewModel @Inject constructor(
         val city = CityDomain(0, state.eventCity, 0.0, 0.0, "")
         val weather = WeatherDomain(0, 0.0, "", Calendar.getInstance())
         val date = state.eventDate
+        val description = state.eventDescription
         val eventType = EventType.COMING
 
         return EventDomain(
@@ -159,6 +160,7 @@ class CreateEventViewModel @Inject constructor(
             city = city,
             weather = weather,
             date = date,
+            description = description,
             eventType = eventType
         )
     }

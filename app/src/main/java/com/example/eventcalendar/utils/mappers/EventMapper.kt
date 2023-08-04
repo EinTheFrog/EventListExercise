@@ -19,6 +19,7 @@ class EventMapper @Inject constructor(
             cityId = eventDomain.city.id,
             weatherId = eventDomain.weather.id,
             date = eventDomain.date,
+            description = eventDomain.description,
             eventType = eventDomain.eventType
         )
     }
@@ -30,6 +31,7 @@ class EventMapper @Inject constructor(
             city = cityMapper.storageToDomain(eventDao.getCityById(eventStorage.cityId)),
             weather = weatherMapper.storageToDomain(eventDao.getWeatherById(eventStorage.weatherId)),
             date = eventStorage.date,
+            description = eventStorage.description,
             eventType = eventStorage.eventType
         )
     }

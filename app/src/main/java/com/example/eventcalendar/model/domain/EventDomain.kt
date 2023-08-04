@@ -9,5 +9,6 @@ data class EventDomain(
     val city: CityDomain,
     val weather: WeatherDomain,
     val date: Calendar,
+    val description: String,
     val eventType: EventType
 )

@@ -10,6 +10,9 @@
         <action
             android:id="@+id/action_eventListFragment_to_createEventFragment"
             app:destination="@id/createEventFragment"/>
+        <action
+            android:id="@+id/action_eventListFragment_to_EventInfoFragment"
+            app:destination="@id/eventInfoFragment"/>
     </fragment>
 
     <fragment
@@ -18,6 +21,14 @@
         <action
             android:id="@+id/action_createEventFragment_to_eventListFragment"
             app:popUpTo="@id/eventListFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/eventInfoFragment"
+        android:name="com.example.eventcalendar.ui.screens.eventInfo.EventInfoFragment">
+        <argument
+            android:name="eventId"
+            app:argType="integer" />
     </fragment>
 
 </navigation>

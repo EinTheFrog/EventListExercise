@@ -11,12 +11,12 @@ import javax.inject.Singleton
 @Singleton
 class EventRepositoryMock @Inject constructor(): EventRepository {
     private val eventList = mutableListOf(
-        EventDomain(0, "Event 0", CityDomain(0, "Dubai", 0.0, 0.0, "UAE"), WeatherDomain(0, 43.0, "", Calendar.getInstance()), Calendar.getInstance(), EventType.VISITED),
-        EventDomain(1, "Event 1", CityDomain(1, "Saint Petersburg", 0.0, 0.0, "Russia"), WeatherDomain(0, 23.0, "", Calendar.getInstance()), Calendar.getInstance(), EventType.VISITED),
-        EventDomain(2, "Event 2", CityDomain(2, "Tbilisi", 0.0, 0.0, "Georgia"), WeatherDomain(0, 31.5, "", Calendar.getInstance()), Calendar.getInstance(), EventType.COMING),
-        EventDomain(3, "Event 3", CityDomain(3, "Erevan", 0.0, 0.0, "Armenia"), WeatherDomain(0, 34.0, "", Calendar.getInstance()), Calendar.getInstance(), EventType.COMING),
-        EventDomain(4, "Event 4", CityDomain(4, "Moscow", 0.0, 0.0, "Russia"), WeatherDomain(0, 28.0, "", Calendar.getInstance()), Calendar.getInstance(), EventType.COMING),
-        EventDomain(0, "Event 5", CityDomain(5, "Tel-Aviv", 0.0, 0.0, "Israel"), WeatherDomain(0, 39.0, "", Calendar.getInstance()), Calendar.getInstance(), EventType.MISSED)
+        EventDomain(0, "Event 0", CityDomain(0, "Dubai", 0.0, 0.0, "UAE"), WeatherDomain(0, 43.0, "", Calendar.getInstance()), Calendar.getInstance(), "", EventType.VISITED),
+        EventDomain(1, "Event 1", CityDomain(1, "Saint Petersburg", 0.0, 0.0, "Russia"), WeatherDomain(0, 23.0, "", Calendar.getInstance()), Calendar.getInstance(), "", EventType.VISITED),
+        EventDomain(2, "Event 2", CityDomain(2, "Tbilisi", 0.0, 0.0, "Georgia"), WeatherDomain(0, 31.5, "", Calendar.getInstance()), Calendar.getInstance(), "", EventType.COMING),
+        EventDomain(3, "Event 3", CityDomain(3, "Erevan", 0.0, 0.0, "Armenia"), WeatherDomain(0, 34.0, "", Calendar.getInstance()), Calendar.getInstance(), "", EventType.COMING),
+        EventDomain(4, "Event 4", CityDomain(4, "Moscow", 0.0, 0.0, "Russia"), WeatherDomain(0, 28.0, "", Calendar.getInstance()), Calendar.getInstance(), "", EventType.COMING),
+        EventDomain(0, "Event 5", CityDomain(5, "Tel-Aviv", 0.0, 0.0, "Israel"), WeatherDomain(0, 39.0, "", Calendar.getInstance()), Calendar.getInstance(), "", EventType.MISSED)
     )
 
     override suspend fun getEvents(): Result<List<EventDomain>> {

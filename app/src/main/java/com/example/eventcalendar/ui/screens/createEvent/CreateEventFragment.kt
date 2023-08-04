@@ -16,7 +16,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
-import androidx.navigation.findNavController
+import androidx.navigation.fragment.findNavController
 import com.example.eventcalendar.R
 import com.example.eventcalendar.databinding.FragmentCreateEventBinding
 import com.example.eventcalendar.ui.EventCalendarApplication
@@ -105,7 +105,7 @@ class CreateEventFragment: Fragment() {
                             toast.show()
                         }
                         is CreateEventState.Finished -> {
-                            binding.root.findNavController().navigate(R.id.action_createEventFragment_to_eventListFragment)
+                            findNavController().navigate(R.id.action_createEventFragment_to_eventListFragment)
                         }
                         is CreateEventState.Error -> {
 

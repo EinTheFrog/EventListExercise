@@ -59,7 +59,8 @@ class EventListFragment: Fragment() {
 
     private fun attachTabLayoutMediator(tabLayout: TabLayout, viewPager: ViewPager2) {
         TabLayoutMediator(tabLayout, viewPager) { tab, position ->
-            tab.text = getString(EventType.getEventTypeById(position).titleResource)
+            tab.setText(EventType.getEventTypeById(position).titleResource)
+            tab.setIcon(EventType.getEventTypeById(position).iconResource)
         }.attach()
     }
 

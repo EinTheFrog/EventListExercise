@@ -1,10 +1,13 @@
 package com.example.eventcalendar.ui.screens.eventList
 
 import android.content.Context
+import android.text.Layout
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.cardview.widget.CardView
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.RecyclerView
 import com.example.eventcalendar.R
 import com.example.eventcalendar.databinding.ItemEventBinding
@@ -14,16 +17,19 @@ import java.util.Calendar
 
 class EventListAdapter(
     private val eventList: List<EventDomain>,
-    private val context: Context
+    private val context: Context,
+    private val onEventClick: (Int) -> Unit
 ): RecyclerView.Adapter<EventListAdapter.ViewHolder>() {
 
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
+        val card: CardView
         val titleText: TextView
         val temperatureText: TextView
         val cityText: TextView
         val dateText: TextView
 
         init {
+            card = view.findViewById(R.id.event_card)
             titleText = view.findViewById(R.id.title_text)
             temperatureText = view.findViewById(R.id.temperature_text)
             cityText = view.findViewById(R.id.city_text)
@@ -40,13 +46,12 @@ class EventListAdapter(
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.titleText.text = eventList[position].title
-        holder.temperatureText.text = context.getString(
-            R.string.temperature,
-            eventList[position].weather.temp
-        )
-        holder.cityText.text = eventList[position].city.name
-        holder.dateText.text = eventList[position].date.toShortString()
+        val event = eventList[position]
+        holder.card.setOnClickListener { onEventClick(event.id) }
+        holder.titleText.text = event.title
+        holder.temperatureText.text = context.getString(R.string.temperature, event.weather.temp)
+        holder.cityText.text = event.city.name
+        holder.dateText.text = event.date.toShortString()
     }
 
 }

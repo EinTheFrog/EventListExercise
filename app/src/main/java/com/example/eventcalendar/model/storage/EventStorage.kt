@@ -13,6 +13,7 @@ data class EventStorage(
     @ColumnInfo(name = "city_id") val cityId: Int,
     @ColumnInfo(name = "weather_id") val weatherId: Int,
     @ColumnInfo(name = "date") val date: Calendar,
+    @ColumnInfo(name = "event_description") val description: String,
     @ColumnInfo(name = "event_type") val eventType: EventType
 ) {
     companion object {
