@@ -1,4 +1,4 @@
-package com.example.eventcalendar.ui.viewmodels
+package com.example.eventcalendar.ui.viewmodels.createEvent
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope

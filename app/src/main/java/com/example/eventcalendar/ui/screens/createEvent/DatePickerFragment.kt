@@ -8,8 +8,8 @@ import android.widget.DatePicker
 import androidx.activity.viewModels
 import androidx.fragment.app.DialogFragment
 import com.example.eventcalendar.ui.EventCalendarApplication
-import com.example.eventcalendar.ui.viewmodels.CreateEventIntent
-import com.example.eventcalendar.ui.viewmodels.CreateEventViewModel
+import com.example.eventcalendar.ui.viewmodels.createEvent.CreateEventIntent
+import com.example.eventcalendar.ui.viewmodels.createEvent.CreateEventViewModel
 import java.util.Calendar
 
 class DatePickerFragment: DialogFragment(), DatePickerDialog.OnDateSetListener {

@@ -1,4 +1,4 @@
-package com.example.eventcalendar.ui.viewmodels
+package com.example.eventcalendar.ui.viewmodels.createEvent
 
 import java.util.Calendar
 

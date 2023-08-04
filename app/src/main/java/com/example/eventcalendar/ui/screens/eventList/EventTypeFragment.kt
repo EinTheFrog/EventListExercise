@@ -10,7 +10,6 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
-import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -18,8 +17,8 @@ import com.example.eventcalendar.databinding.FragmentEventTypeBinding
 import com.example.eventcalendar.model.EventType
 import com.example.eventcalendar.model.domain.EventDomain
 import com.example.eventcalendar.ui.EventCalendarApplication
-import com.example.eventcalendar.ui.viewmodels.EventListState
-import com.example.eventcalendar.ui.viewmodels.EventListViewModel
+import com.example.eventcalendar.ui.viewmodels.eventList.EventListState
+import com.example.eventcalendar.ui.viewmodels.eventList.EventListViewModel
 import com.example.eventcalendar.utils.constants.eventTypeKey
 import kotlinx.coroutines.launch
 

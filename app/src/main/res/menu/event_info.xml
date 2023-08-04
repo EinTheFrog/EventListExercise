@@ -2,9 +2,14 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <item android:id="@+id/confirm_icon"
-        android:title="@string/confirm"
-        android:icon="@drawable/baseline_check_24"
+    <item android:id="@+id/edit_icon"
+        android:title="@string/edit"
+        android:icon="@drawable/baseline_edit_24"
+        app:showAsAction="ifRoom" />
+
+    <item android:id="@+id/delete_icon"
+        android:title="@string/delete"
+        android:icon="@drawable/baseline_delete_24"
         app:showAsAction="ifRoom" />
 
 </menu>

@@ -1,10 +1,9 @@
-package com.example.eventcalendar.ui.viewmodels
+package com.example.eventcalendar.ui.viewmodels.eventList
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.eventcalendar.domain.EventRepository
 import com.example.eventcalendar.model.EventType
-import com.example.eventcalendar.model.domain.EventDomain
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -14,10 +13,12 @@ import javax.inject.Inject
 class EventListViewModel @Inject constructor(
     private val eventRepository: EventRepository
 ): ViewModel() {
-    private val _state = MutableStateFlow<EventListState>(EventListState.Default(
-        isLoading = true,
-        eventList = emptyList()
-    ))
+    private val _state = MutableStateFlow<EventListState>(
+        EventListState.Default(
+            isLoading = true,
+            eventList = emptyList()
+        )
+    )
     val state: StateFlow<EventListState> = _state
 
     fun getEventsByType(type: EventType) {

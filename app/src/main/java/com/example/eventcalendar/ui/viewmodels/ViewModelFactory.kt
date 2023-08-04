@@ -2,6 +2,8 @@ package com.example.eventcalendar.ui.viewmodels
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import com.example.eventcalendar.ui.viewmodels.createEvent.CreateEventViewModel
+import com.example.eventcalendar.ui.viewmodels.eventList.EventListViewModel
 import javax.inject.Inject
 import javax.inject.Provider
 

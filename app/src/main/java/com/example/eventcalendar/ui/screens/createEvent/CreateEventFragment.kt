@@ -20,9 +20,9 @@ import androidx.navigation.fragment.findNavController
 import com.example.eventcalendar.R
 import com.example.eventcalendar.databinding.FragmentCreateEventBinding
 import com.example.eventcalendar.ui.EventCalendarApplication
-import com.example.eventcalendar.ui.viewmodels.CreateEventIntent
-import com.example.eventcalendar.ui.viewmodels.CreateEventState
-import com.example.eventcalendar.ui.viewmodels.CreateEventViewModel
+import com.example.eventcalendar.ui.viewmodels.createEvent.CreateEventIntent
+import com.example.eventcalendar.ui.viewmodels.createEvent.CreateEventState
+import com.example.eventcalendar.ui.viewmodels.createEvent.CreateEventViewModel
 import com.example.eventcalendar.utils.extensions.toReadableString
 import kotlinx.coroutines.launch
 
@@ -36,8 +36,13 @@ class CreateEventFragment: Fragment() {
         }
 
         override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
-            saveEvent()
-            return true
+            return when(menuItem.itemId) {
+                R.id.confirm_icon -> {
+                    saveEvent()
+                    true
+                }
+                else -> false
+            }
         }
     }
 
@@ -127,7 +132,8 @@ class CreateEventFragment: Fragment() {
     }
 
     private fun updateInputState() {
-        viewModel.handleUserIntent(CreateEventIntent.UpdateTextInputs(
+        viewModel.handleUserIntent(
+            CreateEventIntent.UpdateTextInputs(
             newName = binding.eventNameInput.text.toString(),
             newCity = binding.eventCityInput.text.toString(),
             newAddress = binding.eventAddressInput.text.toString(),
