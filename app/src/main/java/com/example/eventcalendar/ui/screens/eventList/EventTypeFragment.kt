@@ -68,7 +68,7 @@ class EventTypeFragment: Fragment() {
 
     private fun subscribeToStateUpdates() {
         lifecycleScope.launch {
-            repeatOnLifecycle(Lifecycle.State.STARTED) {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.state.collect { state ->
                     when(state) {
                         is EventListState.Default -> {

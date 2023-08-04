@@ -27,4 +27,9 @@ class EventRepositoryMock @Inject constructor(): EventRepository {
         eventList.add(event)
         return Result.success(true)
     }
+
+    override suspend fun generateEventId(): Result<Int> {
+        val lastId = eventList.last().id
+        return Result.success(lastId + 1)
+    }
 }

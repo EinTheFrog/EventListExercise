@@ -8,15 +8,27 @@ import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.MenuProvider
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
+import androidx.navigation.findNavController
 import com.example.eventcalendar.R
 import com.example.eventcalendar.databinding.FragmentCreateEventBinding
 import com.example.eventcalendar.ui.EventCalendarApplication
+import com.example.eventcalendar.ui.viewmodels.CreateEventIntent
+import com.example.eventcalendar.ui.viewmodels.CreateEventState
+import com.example.eventcalendar.ui.viewmodels.CreateEventViewModel
+import com.example.eventcalendar.utils.extensions.toReadableString
+import kotlinx.coroutines.launch
 
 class CreateEventFragment: Fragment() {
     private lateinit var binding: FragmentCreateEventBinding
+    private lateinit var viewModel: CreateEventViewModel
 
     private val menuProvider = object: MenuProvider {
         override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
@@ -24,13 +36,17 @@ class CreateEventFragment: Fragment() {
         }
 
         override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
-            return false
+            saveEvent()
+            return true
         }
     }
 
     override fun onAttach(context: Context) {
         activity?.let {
-            (it.application as EventCalendarApplication).appComponent.inject(this)
+            val appComponent = (it.application as EventCalendarApplication).appComponent
+            val vm by it.viewModels<CreateEventViewModel> { appComponent.viewModelFactory() }
+            viewModel = vm
+            appComponent.inject(this)
         }
         super.onAttach(context)
     }
@@ -49,6 +65,7 @@ class CreateEventFragment: Fragment() {
         initActionBar()
         activity?.addMenuProvider(menuProvider)
         binding.eventDateButton.setOnClickListener { showPickDateDialog() }
+        subscribeToStateUpdates()
     }
 
     override fun onDestroyView() {
@@ -71,4 +88,51 @@ class CreateEventFragment: Fragment() {
         val supportFragmentManager = (activity as AppCompatActivity).supportFragmentManager
         calendarFragment.show(supportFragmentManager, "datePicker")
     }
+
+    private fun subscribeToStateUpdates() {
+        lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.state.collect { state ->
+                    when(state) {
+                        is CreateEventState.Default -> {
+                            if (!state.isLoading) {
+                                updateInputs(state)
+                            }
+                        }
+                        is CreateEventState.IncorrectInput -> {
+                            val toast = Toast(requireContext())
+                            toast.setText("Incorrect input")
+                            toast.show()
+                        }
+                        is CreateEventState.Finished -> {
+                            binding.root.findNavController().navigate(R.id.action_createEventFragment_to_eventListFragment)
+                        }
+                        is CreateEventState.Error -> {
+
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    private fun updateInputs(createEventState: CreateEventState.Default) {
+        binding.eventDateButton.text =
+            createEventState.eventDate?.toReadableString() ?: getString(R.string.event_date_hint)
+    }
+
+    private fun saveEvent() {
+        updateInputState()
+        viewModel.saveEvent()
+    }
+
+    private fun updateInputState() {
+        viewModel.handleUserIntent(CreateEventIntent.UpdateTextInputs(
+            newName = binding.eventNameInput.text.toString(),
+            newCity = binding.eventCityInput.text.toString(),
+            newAddress = binding.eventAddressInput.text.toString(),
+            newDescription = binding.eventDescriptionInput.text.toString()
+        ))
+    }
+
 }

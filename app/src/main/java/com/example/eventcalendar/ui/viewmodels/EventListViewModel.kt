@@ -30,7 +30,7 @@ class EventListViewModel @Inject constructor(
                     val filteredEventList = newEventList.filter { it.eventType == type }
                     EventListState.Default(isLoading = false, eventList = filteredEventList)
                 } else {
-                    EventListState.Error(result.exceptionOrNull())
+                    EventListState.Error(isLoading = false, exception = result.exceptionOrNull())
                 }
             }
         }

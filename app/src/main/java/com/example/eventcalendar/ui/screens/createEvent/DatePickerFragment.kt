@@ -3,13 +3,14 @@ package com.example.eventcalendar.ui.screens.createEvent
 import android.app.DatePickerDialog
 import android.app.Dialog
 import android.content.Context
-import android.icu.util.Calendar
 import android.os.Bundle
 import android.widget.DatePicker
 import androidx.activity.viewModels
 import androidx.fragment.app.DialogFragment
 import com.example.eventcalendar.ui.EventCalendarApplication
+import com.example.eventcalendar.ui.viewmodels.CreateEventIntent
 import com.example.eventcalendar.ui.viewmodels.CreateEventViewModel
+import java.util.Calendar
 
 class DatePickerFragment: DialogFragment(), DatePickerDialog.OnDateSetListener {
     private lateinit var viewModel: CreateEventViewModel
@@ -34,6 +35,8 @@ class DatePickerFragment: DialogFragment(), DatePickerDialog.OnDateSetListener {
     }
 
     override fun onDateSet(view: DatePicker?, year: Int, month: Int, dayOfMonth: Int) {
-        viewModel.selectDate(year, month, dayOfMonth)
+        val newDate = Calendar.getInstance()
+        newDate.set(year, month, dayOfMonth)
+        viewModel.handleUserIntent(CreateEventIntent.UpdateDate(newDate))
     }
 }

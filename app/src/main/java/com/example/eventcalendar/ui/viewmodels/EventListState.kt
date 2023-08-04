@@ -10,6 +10,7 @@ sealed class EventListState {
     ): EventListState()
 
     data class Error(
+        val isLoading: Boolean,
         val exception: Throwable?
     ): EventListState()
 
