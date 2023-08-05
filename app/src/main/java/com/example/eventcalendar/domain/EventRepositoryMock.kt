@@ -37,7 +37,30 @@ class EventRepositoryMock @Inject constructor(): EventRepository {
     }
 
     override suspend fun generateEventId(): Result<Int> {
-        val lastId = eventList.last().id
+        val lastId = if (eventList.isEmpty()) 0 else eventList.last().id
         return Result.success(lastId + 1)
+    }
+
+    override suspend fun changeEventType(eventId: Int, eventType: EventType): Result<EventDomain> {
+        for (i in eventList.indices) {
+            val event = eventList[i]
+            if (event.id == eventId) {
+                val newEvent = event.copy(eventType = eventType)
+                eventList[i] = newEvent
+                return Result.success(newEvent)
+            }
+        }
+        return Result.failure(NotFoundException("Event not found"))
+    }
+
+    override suspend fun deleteEvent(eventId: Int): Result<Boolean> {
+        for (i in eventList.indices) {
+            val event = eventList[i]
+            if (event.id == eventId) {
+                eventList.removeAt(i)
+                return Result.success(true)
+            }
+        }
+        return Result.failure(NotFoundException("Event not found"))
     }
 }

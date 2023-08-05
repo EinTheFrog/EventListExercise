@@ -1,5 +1,6 @@
 package com.example.eventcalendar.domain
 
+import com.example.eventcalendar.model.EventType
 import com.example.eventcalendar.model.domain.EventDomain
 
 interface EventRepository {
@@ -10,4 +11,8 @@ interface EventRepository {
     suspend fun saveEvent(event: EventDomain): Result<Boolean>
 
     suspend fun generateEventId(): Result<Int>
+
+    suspend fun changeEventType(eventId: Int, eventType: EventType): Result<EventDomain>
+
+    suspend fun deleteEvent(eventId: Int): Result<Boolean>
 }

@@ -13,4 +13,6 @@ sealed class EventInfoState {
         val exception: Throwable?
     ): EventInfoState()
 
+    object Finished: EventInfoState()
+
 }

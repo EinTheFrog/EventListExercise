@@ -25,50 +25,52 @@
         app:layout_constraintTop_toBottomOf="@id/event_date_text"
         app:layout_constraintEnd_toEndOf="parent" />
 
-    <Button
-        android:id="@+id/type_coming_button"
-        android:text="@string/coming_event_title"
-        android:drawableLeft="@drawable/baseline_access_alarm_16"
-        android:drawableTint="?attr/colorOnPrimary"
+    <com.google.android.material.chip.ChipGroup
+        android:id="@+id/chip_group"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
+        app:chipSpacingHorizontal="16dp"
+        app:singleLine="true"
+        app:selectionRequired="true"
+        app:singleSelection="true"
+        app:checkedChip="@id/type_coming_chip"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/event_city_text"
-        app:layout_constraintEnd_toStartOf="@id/type_visited_button" />
+        app:layout_constraintEnd_toEndOf="parent">
 
-    <Button
-        android:id="@+id/type_visited_button"
-        android:text="@string/visited_event_title"
-        android:drawableLeft="@drawable/baseline_check_16"
-        android:drawableTint="?attr/colorOnPrimary"
-        android:backgroundTint="?attr/colorSecondary"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        app:layout_constraintStart_toEndOf="@id/type_coming_button"
-        app:layout_constraintTop_toBottomOf="@id/event_city_text"
-        app:layout_constraintEnd_toEndOf="@id/type_missed_button" />
+        <com.google.android.material.chip.Chip
+            android:id="@+id/type_coming_chip"
+            style="@style/Widget.MaterialComponents.Chip.Choice"
+            android:text="@string/coming_event_title"
+            app:chipIcon="@drawable/baseline_access_alarm_16"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
 
-    <Button
-        android:id="@+id/type_missed_button"
-        android:text="@string/missed_event_title"
-        android:drawableLeft="@drawable/baseline_close_16"
-        android:drawableTint="?attr/colorOnPrimary"
-        android:backgroundTint="?attr/colorSecondary"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        app:layout_constraintStart_toEndOf="@id/type_visited_button"
-        app:layout_constraintTop_toBottomOf="@id/event_city_text"
-        app:layout_constraintEnd_toEndOf="parent" />
-    
+        <com.google.android.material.chip.Chip
+            android:id="@+id/type_visited_chip"
+            style="@style/Widget.MaterialComponents.Chip.Choice"
+            android:text="@string/visited_event_title"
+            app:chipIcon="@drawable/baseline_check_16"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <com.google.android.material.chip.Chip
+            android:id="@+id/type_missed_chip"
+            style="@style/Widget.MaterialComponents.Chip.Choice"
+            android:text="@string/missed_event_title"
+            app:chipIcon="@drawable/baseline_close_16"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+    </com.google.android.material.chip.ChipGroup>
+
     <com.google.android.material.divider.MaterialDivider
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/type_coming_button"
+        app:layout_constraintTop_toBottomOf="@id/chip_group"
         app:layout_constraintEnd_toEndOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

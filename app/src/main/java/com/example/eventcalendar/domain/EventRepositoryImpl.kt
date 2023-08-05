@@ -3,6 +3,7 @@ package com.example.eventcalendar.domain
 import com.example.eventcalendar.data.network.EventApi
 import com.example.eventcalendar.model.domain.EventDomain
 import com.example.eventcalendar.data.storage.EventDao
+import com.example.eventcalendar.model.EventType
 import com.example.eventcalendar.utils.mappers.EventMapper
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -43,4 +44,11 @@ class EventRepositoryImpl @Inject constructor(
         TODO("Not yet implemented")
     }
 
+    override suspend fun changeEventType(eventId: Int, eventType: EventType): Result<EventDomain> {
+        TODO("Not yet implemented")
+    }
+
+    override suspend fun deleteEvent(eventId: Int): Result<Boolean> {
+        TODO("Not yet implemented")
+    }
 }

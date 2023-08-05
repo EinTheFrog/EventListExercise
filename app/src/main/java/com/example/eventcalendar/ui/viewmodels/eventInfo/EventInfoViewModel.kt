@@ -3,6 +3,7 @@ package com.example.eventcalendar.ui.viewmodels.eventInfo
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.eventcalendar.domain.EventRepository
+import com.example.eventcalendar.model.EventType
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -25,6 +26,40 @@ class EventInfoViewModel @Inject constructor(
             } else {
                 _state.value = EventInfoState.Error(eventResult.exceptionOrNull())
             }
+        }
+    }
+
+    fun changeEventType(eventType: EventType) {
+        viewModelScope.launch {
+            when(val oldState = _state.value) {
+                is EventInfoState.Default -> {
+                    val oldEvent = oldState.event
+                    _state.value = EventInfoState.Loading
+                    val newEventResult = eventRepository.changeEventType(oldEvent.id, eventType)
+                    if (newEventResult.isSuccess) {
+                        val newEvent = newEventResult.getOrThrow()
+                        _state.value = EventInfoState.Default(newEvent)
+                    } else {
+                        _state.value = EventInfoState.Error(newEventResult.exceptionOrNull())
+                    }
+                }
+                else -> {}
+            }
+        }
+    }
+
+    fun deleteEvent() {
+        viewModelScope.launch {
+            when (val oldState = _state.value) {
+                is EventInfoState.Default -> {
+                    val event = oldState.event
+                    _state.value = EventInfoState.Loading
+                    eventRepository.deleteEvent(event.id)
+                    _state.value = EventInfoState.Finished
+                }
+                else -> {}
+            }
+
         }
     }
 
