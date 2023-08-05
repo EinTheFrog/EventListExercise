@@ -26,6 +26,10 @@ class EventRepositoryImpl @Inject constructor(
         }
     }
 
+    override suspend fun getEventById(eventId: Int): Result<EventDomain> {
+        TODO("Not yet implemented")
+    }
+
     override suspend fun saveEvent(event: EventDomain): Result<Boolean> = withContext(Dispatchers.IO) {
         try {
             eventDao.insertEvent(eventMapper.domainToStorage(event))

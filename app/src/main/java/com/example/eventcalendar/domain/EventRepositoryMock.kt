@@ -1,5 +1,6 @@
 package com.example.eventcalendar.domain
 
+import android.content.res.Resources.NotFoundException
 import com.example.eventcalendar.model.EventType
 import com.example.eventcalendar.model.domain.CityDomain
 import com.example.eventcalendar.model.domain.EventDomain
@@ -21,6 +22,13 @@ class EventRepositoryMock @Inject constructor(): EventRepository {
 
     override suspend fun getEvents(): Result<List<EventDomain>> {
         return Result.success(eventList)
+    }
+
+    override suspend fun getEventById(eventId: Int): Result<EventDomain> {
+        for (event in eventList) {
+            if (event.id == eventId) return Result.success(event)
+        }
+        return Result.failure(NotFoundException("Event not found"))
     }
 
     override suspend fun saveEvent(event: EventDomain): Result<Boolean> {
