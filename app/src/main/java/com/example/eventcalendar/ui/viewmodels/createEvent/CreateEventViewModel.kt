@@ -15,13 +15,11 @@ import java.util.Calendar
 import javax.inject.Inject
 import javax.inject.Singleton
 
-@Singleton
 class CreateEventViewModel @Inject constructor(
     private val eventRepository: EventRepository
 ): ViewModel() {
     private val _state = MutableStateFlow<CreateEventState>(
         CreateEventState.Default(
-            isLoading = false,
             eventName = "",
             eventDate = null,
             eventCity = "",
@@ -35,23 +33,21 @@ class CreateEventViewModel @Inject constructor(
         viewModelScope.launch(Dispatchers.Default) {
             when(val oldState = _state.value) {
                 is CreateEventState.Default -> {
-                    _state.value = oldState.copy(isLoading = true)
-                    val newState = createNewState(intent, oldState)
-                    _state.value = newState.copy(isLoading = false)
+                    _state.value = CreateEventState.Loading
+                    _state.value = createNewState(intent, oldState)
                 }
                 is CreateEventState.IncorrectInput -> {
-                    _state.value = oldState.copy(isLoading = false)
-                    val newState = createNewState(intent, oldState.toDefault())
-                    _state.value = newState.copy(isLoading = false)
+                    _state.value = CreateEventState.Loading
+                    _state.value = createNewState(intent, oldState.toDefault())
                 }
                 is CreateEventState.Finished -> {
                     throw IllegalStateException("Cannot create new intents when state is ${oldState::class.simpleName}")
                 }
                 is CreateEventState.Error -> {
-                    _state.value = oldState.copy(isLoading = true)
-                    val newState = createNewState(intent)
-                    _state.value = newState.copy(isLoading = false)
+                    _state.value = CreateEventState.Loading
+                    _state.value = createNewState(intent)
                 }
+                is CreateEventState.Loading -> {}
             }
         }
     }
@@ -65,10 +61,11 @@ class CreateEventViewModel @Inject constructor(
                 is CreateEventState.IncorrectInput -> {
                     saveEventWhenIncorrectInput(oldState)
                 }
-                is CreateEventState.Finished -> {}
+                is CreateEventState.Finished -> {
+                    throw IllegalStateException("Cannot create new intents when state is ${oldState::class.simpleName}")
+                }
                 is CreateEventState.Error -> {
                     _state.value = CreateEventState.Default(
-                        isLoading = false,
                         eventName = "",
                         eventDate = null,
                         eventCity = "",
@@ -76,6 +73,7 @@ class CreateEventViewModel @Inject constructor(
                         eventDescription = ""
                     )
                 }
+                is CreateEventState.Loading -> {}
             }
         }
     }
@@ -83,10 +81,10 @@ class CreateEventViewModel @Inject constructor(
     private suspend fun saveEventWhenDefault(
         oldState: CreateEventState.Default
     ) {
-        _state.value = oldState.copy(isLoading = true)
+        _state.value = CreateEventState.Loading
         val event = createEvent(oldState)
         if (event == null) {
-            _state.value = oldState.toIncorrectInput().copy(isLoading = false)
+            _state.value = oldState.toIncorrectInput()
         } else {
             saveAndFinish(event)
         }
@@ -95,11 +93,10 @@ class CreateEventViewModel @Inject constructor(
     private suspend fun saveEventWhenIncorrectInput(
         oldState: CreateEventState.IncorrectInput,
     ) {
-        _state.value = oldState.copy(isLoading = true)
+        _state.value = CreateEventState.Loading
         val event = createEvent(oldState.toDefault())
         if (event == null) {
             _state.value = oldState.copy(
-                isLoading = false,
                 numberOfAttempts = oldState.numberOfAttempts + 1
             )
         } else {
@@ -116,7 +113,6 @@ class CreateEventViewModel @Inject constructor(
         return createNewState(
             intent = intent,
             oldState = CreateEventState.Default(
-                isLoading = true,
                 eventName = "",
                 eventDate = null,
                 eventCity = "",

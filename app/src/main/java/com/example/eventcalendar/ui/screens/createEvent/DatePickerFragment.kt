@@ -7,6 +7,7 @@ import android.os.Bundle
 import android.widget.DatePicker
 import androidx.activity.viewModels
 import androidx.fragment.app.DialogFragment
+import androidx.fragment.app.viewModels
 import com.example.eventcalendar.ui.EventCalendarApplication
 import com.example.eventcalendar.ui.viewmodels.createEvent.CreateEventIntent
 import com.example.eventcalendar.ui.viewmodels.createEvent.CreateEventViewModel
@@ -18,9 +19,10 @@ class DatePickerFragment: DialogFragment(), DatePickerDialog.OnDateSetListener {
     override fun onAttach(context: Context) {
         activity?.let {
             val appComponent = (it.application as EventCalendarApplication).appComponent
-            val vm by it.viewModels<CreateEventViewModel> {
-                appComponent.viewModelFactory()
-            }
+            val vm by viewModels<CreateEventViewModel>(
+                ownerProducer = { requireParentFragment() },
+                factoryProducer = { appComponent.viewModelFactory() }
+            )
             viewModel = vm
         }
         super.onAttach(context)

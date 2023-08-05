@@ -13,6 +13,7 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.MenuProvider
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
@@ -49,7 +50,7 @@ class CreateEventFragment: Fragment() {
     override fun onAttach(context: Context) {
         activity?.let {
             val appComponent = (it.application as EventCalendarApplication).appComponent
-            val vm by it.viewModels<CreateEventViewModel> { appComponent.viewModelFactory() }
+            val vm by viewModels<CreateEventViewModel> { appComponent.viewModelFactory() }
             viewModel = vm
             appComponent.inject(this)
         }
@@ -90,8 +91,7 @@ class CreateEventFragment: Fragment() {
     private fun showPickDateDialog() {
         val calendarFragment = DatePickerFragment()
         if (activity == null) return
-        val supportFragmentManager = (activity as AppCompatActivity).supportFragmentManager
-        calendarFragment.show(supportFragmentManager, "datePicker")
+        calendarFragment.show(childFragmentManager, "datePicker")
     }
 
     private fun subscribeToStateUpdates() {
@@ -100,9 +100,7 @@ class CreateEventFragment: Fragment() {
                 viewModel.state.collect { state ->
                     when(state) {
                         is CreateEventState.Default -> {
-                            if (!state.isLoading) {
-                                updateInputs(state)
-                            }
+                            updateInputs(state)
                         }
                         is CreateEventState.IncorrectInput -> {
                             val toast = Toast(requireContext())
@@ -112,9 +110,7 @@ class CreateEventFragment: Fragment() {
                         is CreateEventState.Finished -> {
                             findNavController().navigate(R.id.action_createEventFragment_to_eventListFragment)
                         }
-                        is CreateEventState.Error -> {
-
-                        }
+                        is CreateEventState.Error, is CreateEventState.Loading -> {}
                     }
                 }
             }
