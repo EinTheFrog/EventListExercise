@@ -19,6 +19,8 @@ import com.example.eventcalendar.model.domain.EventDomain
 import com.example.eventcalendar.ui.EventCalendarApplication
 import com.example.eventcalendar.ui.viewmodels.eventList.EventListState
 import com.example.eventcalendar.ui.viewmodels.eventList.EventListViewModel
+import com.example.eventcalendar.ui.viewmodels.eventList.EventTypeState
+import com.example.eventcalendar.ui.viewmodels.eventList.EventTypeViewModel
 import com.example.eventcalendar.utils.constants.eventTypeKey
 import kotlinx.coroutines.launch
 
@@ -26,13 +28,13 @@ class EventTypeFragment: Fragment() {
     private lateinit var binding: FragmentEventTypeBinding
     private lateinit var adapter: EventListAdapter
     private val eventList: MutableList<EventDomain> = mutableListOf()
-    lateinit var viewModel: EventListViewModel
+    lateinit var viewModel: EventTypeViewModel
 
     override fun onAttach(context: Context) {
         activity?.let {
             val appComponent = (it.application as EventCalendarApplication).appComponent
             appComponent.inject(this)
-            val vm by viewModels<EventListViewModel> {
+            val vm by viewModels<EventTypeViewModel> {
                 appComponent.viewModelFactory()
             }
             viewModel = vm
@@ -54,10 +56,7 @@ class EventTypeFragment: Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         subscribeToStateUpdates()
-
-        val eventTypeId = arguments?.getInt(eventTypeKey) ?: return
-        val eventType = EventType.getEventTypeById(eventTypeId)
-        viewModel.getEventsByType(eventType)
+        getEvents()
     }
 
     private fun initRecyclerView(recyclerView: RecyclerView) {
@@ -75,17 +74,21 @@ class EventTypeFragment: Fragment() {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.state.collect { state ->
                     when(state) {
-                        is EventListState.Default -> {
+                        is EventTypeState.Default -> {
                             eventList.clear()
                             eventList.addAll(state.eventList)
                             adapter.notifyDataSetChanged()
                         }
-                        is EventListState.Error -> {
-
-                        }
+                        is EventTypeState.Error, is EventTypeState.Loading -> {}
                     }
                 }
             }
         }
+    }
+
+    private fun getEvents() {
+        val eventTypeId = arguments?.getInt(eventTypeKey) ?: return
+        val eventType = EventType.getEventTypeById(eventTypeId)
+        viewModel.getEventsByType(eventType)
     }
 }

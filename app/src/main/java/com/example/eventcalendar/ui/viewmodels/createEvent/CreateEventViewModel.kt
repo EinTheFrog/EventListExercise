@@ -19,15 +19,21 @@ class CreateEventViewModel @Inject constructor(
     private val eventRepository: EventRepository
 ): ViewModel() {
     private val _state = MutableStateFlow<CreateEventState>(
-        CreateEventState.Default(
+        CreateEventState.Loading
+    )
+    val state: StateFlow<CreateEventState> = _state
+
+    fun initState(eventId: Int, eventType: EventType) {
+        _state.value = CreateEventState.Default(
+            eventId = eventId,
             eventName = "",
             eventDate = null,
             eventCity = "",
             eventAddress = "",
-            eventDescription = ""
+            eventDescription = "",
+            eventType = eventType
         )
-    )
-    val state: StateFlow<CreateEventState> = _state
+    }
 
     fun handleUserIntent(intent: CreateEventIntent) {
         viewModelScope.launch(Dispatchers.Default) {
@@ -43,10 +49,7 @@ class CreateEventViewModel @Inject constructor(
                 is CreateEventState.Finished -> {
                     throw IllegalStateException("Cannot create new intents when state is ${oldState::class.simpleName}")
                 }
-                is CreateEventState.Error -> {
-                    _state.value = CreateEventState.Loading
-                    _state.value = createNewState(intent)
-                }
+                is CreateEventState.Error -> {}
                 is CreateEventState.Loading -> {}
             }
         }
@@ -64,15 +67,7 @@ class CreateEventViewModel @Inject constructor(
                 is CreateEventState.Finished -> {
                     throw IllegalStateException("Cannot create new intents when state is ${oldState::class.simpleName}")
                 }
-                is CreateEventState.Error -> {
-                    _state.value = CreateEventState.Default(
-                        eventName = "",
-                        eventDate = null,
-                        eventCity = "",
-                        eventAddress = "",
-                        eventDescription = ""
-                    )
-                }
+                is CreateEventState.Error -> {}
                 is CreateEventState.Loading -> {}
             }
         }
@@ -109,19 +104,6 @@ class CreateEventViewModel @Inject constructor(
         _state.value = CreateEventState.Finished
     }
 
-    private fun createNewState(intent: CreateEventIntent): CreateEventState.Default {
-        return createNewState(
-            intent = intent,
-            oldState = CreateEventState.Default(
-                eventName = "",
-                eventDate = null,
-                eventCity = "",
-                eventAddress = "",
-                eventDescription = ""
-            )
-        )
-    }
-
     private fun createNewState(intent: CreateEventIntent, oldState: CreateEventState.Default): CreateEventState.Default {
         val newState = when(intent) {
             is CreateEventIntent.UpdateTextInputs -> oldState.copy(
@@ -135,20 +117,19 @@ class CreateEventViewModel @Inject constructor(
         return newState
     }
 
-    private suspend fun createEvent(state: CreateEventState.Default): EventDomain? {
+    private fun createEvent(state: CreateEventState.Default): EventDomain? {
         if (state.eventName.isEmpty()) return null
         if (state.eventDate == null) return null
         if (state.eventCity.isEmpty()) return null
         if (state.eventAddress.isEmpty()) return null
 
-        val idResult = eventRepository.generateEventId()
-        val id = idResult.getOrThrow()
+        val id = state.eventId
         val title = state.eventName
         val city = CityDomain(0, state.eventCity, 0.0, 0.0, "")
         val weather = WeatherDomain(0, 0.0, "", Calendar.getInstance())
         val date = state.eventDate
         val description = state.eventDescription
-        val eventType = EventType.COMING
+        val eventType = state.eventType
 
         return EventDomain(
             id = id,

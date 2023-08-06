@@ -18,8 +18,10 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
+import androidx.navigation.fragment.navArgs
 import com.example.eventcalendar.R
 import com.example.eventcalendar.databinding.FragmentCreateEventBinding
+import com.example.eventcalendar.model.EventType
 import com.example.eventcalendar.ui.EventCalendarApplication
 import com.example.eventcalendar.ui.viewmodels.createEvent.CreateEventIntent
 import com.example.eventcalendar.ui.viewmodels.createEvent.CreateEventState
@@ -30,6 +32,7 @@ import kotlinx.coroutines.launch
 class CreateEventFragment: Fragment() {
     private lateinit var binding: FragmentCreateEventBinding
     private lateinit var viewModel: CreateEventViewModel
+    private val args by navArgs<CreateEventFragmentArgs>()
 
     private val menuProvider = object: MenuProvider {
         override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
@@ -71,6 +74,7 @@ class CreateEventFragment: Fragment() {
         initActionBar()
         activity?.addMenuProvider(menuProvider)
         binding.eventDateButton.setOnClickListener { showPickDateDialog() }
+        viewModel.initState(args.eventId, EventType.getEventTypeById(args.eventTypeId))
         subscribeToStateUpdates()
     }
 
@@ -104,13 +108,19 @@ class CreateEventFragment: Fragment() {
                         }
                         is CreateEventState.IncorrectInput -> {
                             val toast = Toast(requireContext())
-                            toast.setText("Incorrect input")
+                            toast.setText(getString(R.string.incorrect_input))
                             toast.show()
                         }
                         is CreateEventState.Finished -> {
                             findNavController().navigate(R.id.action_createEventFragment_to_eventListFragment)
                         }
-                        is CreateEventState.Error, is CreateEventState.Loading -> {}
+                        is CreateEventState.Error -> {
+                            val toast = Toast(requireContext())
+                            toast.setText(state.exception.toString())
+                            toast.show()
+                            findNavController().navigate(R.id.action_createEventFragment_to_eventListFragment)
+                        }
+                        is CreateEventState.Loading -> {}
                     }
                 }
             }

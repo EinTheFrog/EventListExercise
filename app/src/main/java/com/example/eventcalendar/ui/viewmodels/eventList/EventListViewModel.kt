@@ -9,30 +9,38 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
+import javax.inject.Singleton
 
 class EventListViewModel @Inject constructor(
     private val eventRepository: EventRepository
 ): ViewModel() {
-    private val _state = MutableStateFlow<EventListState>(
-        EventListState.Default(
-            isLoading = true,
-            eventList = emptyList()
-        )
-    )
+    private val _state = MutableStateFlow<EventListState>(EventListState.Loading)
     val state: StateFlow<EventListState> = _state
 
-    fun getEventsByType(type: EventType) {
+    fun toLoadingState() {
+        _state.value = EventListState.Loading
+    }
+    fun selectEventType(eventType: EventType) {
+        _state.value = EventListState.Default(newEventType = eventType)
+    }
+
+    fun startNewEventCreation() {
         viewModelScope.launch(Dispatchers.IO) {
-            _state.apply {
-                value = EventListState.Default(isLoading = true, eventList = emptyList())
-                val result = eventRepository.getEvents()
-                value = if (result.isSuccess) {
-                    val newEventList = result.getOrDefault(emptyList())
-                    val filteredEventList = newEventList.filter { it.eventType == type }
-                    EventListState.Default(isLoading = false, eventList = filteredEventList)
-                } else {
-                    EventListState.Error(isLoading = false, exception = result.exceptionOrNull())
+            when(val oldState = _state.value) {
+                is EventListState.Default -> {
+                    _state.value = EventListState.Loading
+                    val newIdResult = eventRepository.generateEventId()
+                    if (newIdResult.isSuccess) {
+                        val newId = newIdResult.getOrThrow()
+                        _state.value = EventListState.NewEvent(
+                            newEventId = newId,
+                            newEventType = oldState.newEventType
+                        )
+                    } else {
+                        _state.value = EventListState.Error(newIdResult.exceptionOrNull())
+                    }
                 }
+                else -> {}
             }
         }
     }

@@ -22,4 +22,7 @@
     <string name="back">Back</string>
     <string name="edit">Edit</string>
     <string name="delete">Delete</string>
+
+    // toasts
+    <string name="incorrect_input">Incorrect input</string>
 </resources>

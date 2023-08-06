@@ -21,6 +21,9 @@
         <argument
             android:name="eventId"
             app:argType="integer" />
+        <argument
+            android:name="eventTypeId"
+            app:argType="integer" />
         <action
             android:id="@+id/action_createEventFragment_to_eventListFragment"
             app:popUpTo="@id/eventListFragment" />
