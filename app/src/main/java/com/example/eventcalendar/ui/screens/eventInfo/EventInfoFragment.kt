@@ -31,6 +31,7 @@ import kotlinx.coroutines.launch
 class EventInfoFragment: Fragment() {
     private lateinit var binding: FragmentEventInfoBinding
     private lateinit var viewModel: EventInfoViewModel
+    private var eventType: EventType? = null
     private val args by navArgs<EventInfoFragmentArgs>()
     private val menuProvider = object: MenuProvider {
         override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
@@ -39,7 +40,15 @@ class EventInfoFragment: Fragment() {
 
         override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
             return when(menuItem.itemId) {
-                R.id.edit_icon -> false
+                R.id.edit_icon -> {
+                    val currentEventType = eventType ?: return true
+                    val action = EventInfoFragmentDirections.actionEventInfoFragmentToCreateEventFragment(
+                        args.eventId,
+                        currentEventType.id
+                    )
+                    findNavController().navigate(action)
+                    true
+                }
                 R.id.delete_icon -> {
                     viewModel.deleteEvent()
                     true
@@ -109,6 +118,7 @@ class EventInfoFragment: Fragment() {
         binding.eventDateText.text = event.date.toShortString()
         binding.eventCityText.text = event.city.name
         getActionBar()?.title = event.title
+        eventType = event.eventType
         when (event.eventType) {
             EventType.COMING -> {
                 binding.chipGroup.check(binding.typeComingChip.id)

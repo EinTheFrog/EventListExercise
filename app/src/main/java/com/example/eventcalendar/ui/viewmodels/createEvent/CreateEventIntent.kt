@@ -9,5 +9,13 @@ sealed class CreateEventIntent {
         val newAddress: String,
         val newDescription: String
     ): CreateEventIntent()
+
+    data class UpdateName(val newName: String): CreateEventIntent()
     data class UpdateDate(val newDate: Calendar): CreateEventIntent()
+
+    data class UpdateCity(val newCity: String): CreateEventIntent()
+
+    data class UpdateAddress(val newAddress: String): CreateEventIntent()
+
+    data class UpdateDescription(val newDescription: String): CreateEventIntent()
 }

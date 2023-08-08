@@ -10,6 +10,8 @@ interface EventRepository {
 
     suspend fun saveEvent(event: EventDomain): Result<Boolean>
 
+    suspend fun updateEvent(event: EventDomain): Result<Boolean>
+
     suspend fun generateEventId(): Result<Int>
 
     suspend fun changeEventType(eventId: Int, eventType: EventType): Result<EventDomain>

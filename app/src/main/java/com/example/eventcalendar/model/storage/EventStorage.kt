@@ -11,6 +11,7 @@ data class EventStorage(
     @PrimaryKey val id: Int,
     @ColumnInfo(name = "title") val title: String,
     @ColumnInfo(name = "city_id") val cityId: Int,
+    @ColumnInfo(name = "address") val address: String,
     @ColumnInfo(name = "weather_id") val weatherId: Int,
     @ColumnInfo(name = "date") val date: Calendar,
     @ColumnInfo(name = "event_description") val description: String,

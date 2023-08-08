@@ -40,6 +40,10 @@ class EventRepositoryImpl @Inject constructor(
         }
     }
 
+    override suspend fun updateEvent(event: EventDomain): Result<Boolean> {
+        TODO("Not yet implemented")
+    }
+
     override suspend fun generateEventId(): Result<Int> {
         TODO("Not yet implemented")
     }

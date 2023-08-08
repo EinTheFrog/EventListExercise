@@ -7,6 +7,7 @@ data class EventDomain(
     val id: Int,
     val title: String,
     val city: CityDomain,
+    val address: String,
     val weather: WeatherDomain,
     val date: Calendar,
     val description: String,

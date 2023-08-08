@@ -7,7 +7,9 @@ import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
+import android.view.View.OnFocusChangeListener
 import android.view.ViewGroup
+import android.widget.EditText
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
@@ -76,6 +78,7 @@ class CreateEventFragment: Fragment() {
         binding.eventDateButton.setOnClickListener { showPickDateDialog() }
         viewModel.initState(args.eventId, EventType.getEventTypeById(args.eventTypeId))
         subscribeToStateUpdates()
+        setInputListeners()
     }
 
     override fun onDestroyView() {
@@ -128,13 +131,49 @@ class CreateEventFragment: Fragment() {
     }
 
     private fun updateInputs(createEventState: CreateEventState.Default) {
+        binding.eventNameInput.setTextIfNotInFocus(createEventState.eventName)
         binding.eventDateButton.text =
             createEventState.eventDate?.toReadableString() ?: getString(R.string.event_date_hint)
+        binding.eventCityInput.setTextIfNotInFocus(createEventState.eventCity)
+        binding.eventAddressInput.setTextIfNotInFocus(createEventState.eventAddress)
+        binding.eventDescriptionInput.setTextIfNotInFocus(createEventState.eventDescription)
+    }
+
+    private fun EditText.setTextIfNotInFocus(text: String) {
+        if (hasFocus()) return
+        setText(text)
     }
 
     private fun saveEvent() {
         updateInputState()
         viewModel.saveEvent()
+    }
+
+    private fun setInputListeners() {
+        binding.eventNameInput.onFocusChangeListener =
+            OnFocusChangeListener { v, hasFocus ->
+                if (hasFocus) return@OnFocusChangeListener
+                val editText = v as EditText
+                viewModel.handleUserIntent(CreateEventIntent.UpdateName(editText.text.toString()))
+            }
+        binding.eventCityInput.onFocusChangeListener =
+            OnFocusChangeListener { v, hasFocus ->
+                if (hasFocus) return@OnFocusChangeListener
+                val editText = v as EditText
+                viewModel.handleUserIntent(CreateEventIntent.UpdateCity(editText.text.toString()))
+            }
+        binding.eventAddressInput.onFocusChangeListener =
+            OnFocusChangeListener { v, hasFocus ->
+                if (hasFocus) return@OnFocusChangeListener
+                val editText = v as EditText
+                viewModel.handleUserIntent(CreateEventIntent.UpdateAddress(editText.text.toString()))
+            }
+        binding.eventDescriptionInput.onFocusChangeListener =
+            OnFocusChangeListener { v, hasFocus ->
+                if (hasFocus) return@OnFocusChangeListener
+                val editText = v as EditText
+                viewModel.handleUserIntent(CreateEventIntent.UpdateDescription(editText.text.toString()))
+            }
     }
 
     private fun updateInputState() {
