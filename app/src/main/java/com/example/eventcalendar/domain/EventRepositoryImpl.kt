@@ -4,6 +4,7 @@ import com.example.eventcalendar.data.network.EventApi
 import com.example.eventcalendar.model.domain.EventDomain
 import com.example.eventcalendar.data.storage.EventDao
 import com.example.eventcalendar.model.EventType
+import com.example.eventcalendar.model.domain.CityDomain
 import com.example.eventcalendar.utils.mappers.EventMapper
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -53,6 +54,10 @@ class EventRepositoryImpl @Inject constructor(
     }
 
     override suspend fun deleteEvent(eventId: Int): Result<Boolean> {
+        TODO("Not yet implemented")
+    }
+
+    override suspend fun getCitySuggestions(searchQuery: String): Result<List<CityDomain>> {
         TODO("Not yet implemented")
     }
 }

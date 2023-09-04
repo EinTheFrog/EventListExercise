@@ -27,27 +27,19 @@
         app:layout_constraintTop_toBottomOf="@id/event_name_input"
         app:layout_constraintEnd_toEndOf="parent" />
 
-    <ImageView
-        android:id="@+id/search_icon"
-        android:inputType="text"
-        android:src="@drawable/baseline_search_24"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@id/event_city_input"
-        app:layout_constraintBottom_toBottomOf="@id/event_city_input" />
 
-    <EditText
-        android:id="@+id/event_city_input"
-        android:inputType="text"
+    <androidx.appcompat.widget.SearchView
+        android:id="@+id/event_city_search_view"
         android:hint="@string/event_city_hint"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="4dp"
         android:layout_marginTop="12dp"
-        app:layout_constraintStart_toEndOf="@id/search_icon"
+        app:iconifiedByDefault="false"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/event_date_button"
-        app:layout_constraintEnd_toEndOf="parent" />
+        app:layout_constraintEnd_toEndOf="parent">
+
+    </androidx.appcompat.widget.SearchView>
 
     <EditText
         android:id="@+id/event_address_input"
@@ -57,7 +49,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="12dp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/event_city_input"
+        app:layout_constraintTop_toBottomOf="@id/event_city_search_view"
         app:layout_constraintEnd_toEndOf="parent" />
 
     <EditText

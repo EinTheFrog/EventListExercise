@@ -1,6 +1,7 @@
 package com.example.eventcalendar.ui.viewmodels.createEvent
 
 import com.example.eventcalendar.model.EventType
+import com.example.eventcalendar.model.domain.CityDomain
 import java.util.Calendar
 
 sealed class CreateEventState {
@@ -9,10 +10,11 @@ sealed class CreateEventState {
         val eventId: Int,
         val eventName: String,
         val eventDate: Calendar?,
-        val eventCity: String,
+        val eventCity: CityDomain?,
         val eventAddress: String,
         val eventDescription: String,
-        val eventType: EventType
+        val eventType: EventType,
+        val suggestedCities: List<CityDomain>
     ): CreateEventState() {
         fun toIncorrectInput(): IncorrectInput = IncorrectInput(
             eventId = eventId,
@@ -22,7 +24,8 @@ sealed class CreateEventState {
             eventCity = eventCity,
             eventAddress = eventAddress,
             eventDescription = eventDescription,
-            eventType = eventType
+            eventType = eventType,
+            suggestedCities = suggestedCities
         )
     }
 
@@ -31,10 +34,11 @@ sealed class CreateEventState {
         val numberOfAttempts: Int,
         val eventName: String,
         val eventDate: Calendar?,
-        val eventCity: String,
+        val eventCity: CityDomain?,
         val eventAddress: String,
         val eventDescription: String,
-        val eventType: EventType
+        val eventType: EventType,
+        val suggestedCities: List<CityDomain>
     ): CreateEventState() {
         fun toDefault(): Default = Default(
             eventId = eventId,
@@ -43,7 +47,8 @@ sealed class CreateEventState {
             eventCity = eventCity,
             eventAddress = eventAddress,
             eventDescription = eventDescription,
-            eventType = eventType
+            eventType = eventType,
+            suggestedCities = suggestedCities
         )
     }
 

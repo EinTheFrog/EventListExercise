@@ -1,10 +1,11 @@
 package com.example.eventcalendar.ui.viewmodels.createEvent
 
+import android.content.res.Resources.NotFoundException
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.eventcalendar.domain.EventRepository
 import com.example.eventcalendar.model.EventType
-import com.example.eventcalendar.model.domain.CityDomain
 import com.example.eventcalendar.model.domain.EventDomain
 import com.example.eventcalendar.model.domain.WeatherDomain
 import kotlinx.coroutines.Dispatchers
@@ -13,7 +14,6 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import java.util.Calendar
 import javax.inject.Inject
-import javax.inject.Singleton
 
 class CreateEventViewModel @Inject constructor(
     private val eventRepository: EventRepository
@@ -22,7 +22,7 @@ class CreateEventViewModel @Inject constructor(
     val state: StateFlow<CreateEventState> = _state
 
     fun initState(eventId: Int, eventType: EventType) {
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch(Dispatchers.Main) {
             _state.value = CreateEventState.Loading
             val eventResult = eventRepository.getEventById(eventId)
             if (eventResult.isSuccess) {
@@ -31,27 +31,29 @@ class CreateEventViewModel @Inject constructor(
                     eventId = event.id,
                     eventName = event.title,
                     eventDate = event.date,
-                    eventCity = event.city.name,
+                    eventCity = event.city,
                     eventAddress = event.address,
                     eventDescription = event.description,
-                    eventType = event.eventType
+                    eventType = event.eventType,
+                    suggestedCities = emptyList()
                 )
             } else {
                 _state.value = CreateEventState.Default(
                     eventId = eventId,
                     eventName = "",
                     eventDate = null,
-                    eventCity = "",
+                    eventCity = null,
                     eventAddress = "",
                     eventDescription = "",
-                    eventType = eventType
+                    eventType = eventType,
+                    suggestedCities = emptyList()
                 )
             }
         }
     }
 
     fun handleUserIntent(intent: CreateEventIntent) {
-        viewModelScope.launch(Dispatchers.Default) {
+        viewModelScope.launch(Dispatchers.Main) {
             when(val oldState = _state.value) {
                 is CreateEventState.Default -> {
                     _state.value = CreateEventState.Loading
@@ -69,7 +71,7 @@ class CreateEventViewModel @Inject constructor(
     }
 
     fun saveEvent() {
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch(Dispatchers.Main) {
             when(val oldState = _state.value) {
                 is CreateEventState.Default -> {
                     saveEventWhenDefault(oldState)
@@ -126,21 +128,42 @@ class CreateEventViewModel @Inject constructor(
         return eventResult.isSuccess
     }
 
-    private fun createNewState(intent: CreateEventIntent, oldState: CreateEventState.Default): CreateEventState.Default {
+    private suspend fun createNewState(
+        intent: CreateEventIntent,
+        oldState: CreateEventState.Default
+    ): CreateEventState {
         val newState = when(intent) {
             is CreateEventIntent.UpdateTextInputs -> oldState.copy(
                 eventName = intent.newName,
-                eventCity = intent.newCity,
                 eventAddress = intent.newAddress,
                 eventDescription = intent.newDescription
             )
             is CreateEventIntent.UpdateName -> oldState.copy(
                 eventName = intent.newName
             )
-            is CreateEventIntent.UpdateDate -> oldState.copy(eventDate = intent.newDate)
-            is CreateEventIntent.UpdateCity -> oldState.copy(
-                eventCity = intent.newCity
+            is CreateEventIntent.UpdateDate -> oldState.copy(
+                eventDate = intent.newDate
             )
+            is CreateEventIntent.GetCitySuggestions -> {
+                val suggestionsResult = eventRepository.getCitySuggestions(intent.citySearchQuery)
+                if (suggestionsResult.isSuccess) {
+                    val suggestions = suggestionsResult.getOrThrow()
+                    oldState.copy(suggestedCities = suggestions)
+                } else {
+                    CreateEventState.Error(suggestionsResult.exceptionOrNull())
+                }
+            }
+            is CreateEventIntent.UpdateCity -> {
+                val newCity = oldState.suggestedCities.find { it.name == intent.newCityName }
+                if (newCity != null) {
+                    oldState.copy(
+                        eventCity = newCity
+                    )
+                } else {
+                    CreateEventState.Error(NotFoundException("City not found in suggestions"))
+                }
+
+            }
             is CreateEventIntent.UpdateAddress -> oldState.copy(
                 eventAddress = intent.newAddress
             )
@@ -154,10 +177,11 @@ class CreateEventViewModel @Inject constructor(
     private fun createEvent(state: CreateEventState.Default): EventDomain? {
         if (state.eventName.isEmpty()) return null
         if (state.eventDate == null) return null
+        if (state.eventCity == null) return null
 
         val id = state.eventId
         val title = state.eventName
-        val city = CityDomain(0, state.eventCity, 0.0, 0.0, "")
+        val city = state.eventCity
         val address = state.eventAddress
         val weather = WeatherDomain(0, 0.0, "", Calendar.getInstance())
         val date = state.eventDate
