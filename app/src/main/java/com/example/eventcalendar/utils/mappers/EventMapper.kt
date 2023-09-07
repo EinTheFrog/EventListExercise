@@ -1,6 +1,7 @@
 package com.example.eventcalendar.utils.mappers
 
 import com.example.eventcalendar.data.storage.EventDao
+import com.example.eventcalendar.model.domain.CityDomain
 import com.example.eventcalendar.model.domain.EventDomain
 import com.example.eventcalendar.model.storage.EventStorage
 import javax.inject.Inject
@@ -8,7 +9,6 @@ import javax.inject.Singleton
 
 @Singleton
 class EventMapper @Inject constructor(
-    private val cityMapper: CityMapper,
     private val weatherMapper: WeatherMapper,
     private val eventDao: EventDao
 ) {
@@ -16,7 +16,10 @@ class EventMapper @Inject constructor(
         return EventStorage(
             id = eventDomain.id,
             title = eventDomain.title,
-            cityId = eventDomain.city.id,
+            cityName = eventDomain.city.name,
+            latitude = eventDomain.city.latitude,
+            longitude = eventDomain.city.longitude,
+            country = eventDomain.city.country,
             address = eventDomain.address,
             weatherId = eventDomain.weather.id,
             date = eventDomain.date,
@@ -25,11 +28,16 @@ class EventMapper @Inject constructor(
         )
     }
 
-    fun storageToDomain(eventStorage: EventStorage): EventDomain {
+    suspend fun storageToDomain(eventStorage: EventStorage): EventDomain {
         return EventDomain(
             id = eventStorage.id,
             title = eventStorage.title,
-            city = cityMapper.storageToDomain(eventDao.getCityById(eventStorage.cityId)),
+            city = CityDomain(
+                name = eventStorage.cityName,
+                longitude = eventStorage.longitude,
+                latitude = eventStorage.latitude,
+                country = eventStorage.country
+            ),
             address = eventStorage.address,
             weather = weatherMapper.storageToDomain(eventDao.getWeatherById(eventStorage.weatherId)),
             date = eventStorage.date,

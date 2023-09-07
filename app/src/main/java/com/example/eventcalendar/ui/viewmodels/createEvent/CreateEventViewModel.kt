@@ -145,12 +145,16 @@ class CreateEventViewModel @Inject constructor(
                 eventDate = intent.newDate
             )
             is CreateEventIntent.GetCitySuggestions -> {
-                val suggestionsResult = eventRepository.getCitySuggestions(intent.citySearchQuery)
-                if (suggestionsResult.isSuccess) {
-                    val suggestions = suggestionsResult.getOrThrow()
-                    oldState.copy(suggestedCities = suggestions)
+                if (intent.citySearchQuery.isEmpty()) {
+                    oldState
                 } else {
-                    CreateEventState.Error(suggestionsResult.exceptionOrNull())
+                    val suggestionsResult = eventRepository.getCitySuggestions(intent.citySearchQuery)
+                    if (suggestionsResult.isSuccess) {
+                        val suggestions = suggestionsResult.getOrThrow()
+                        oldState.copy(suggestedCities = suggestions)
+                    } else {
+                        CreateEventState.Error(suggestionsResult.exceptionOrNull())
+                    }
                 }
             }
             is CreateEventIntent.UpdateCity -> {
@@ -199,5 +203,4 @@ class CreateEventViewModel @Inject constructor(
             eventType = eventType
         )
     }
-
 }

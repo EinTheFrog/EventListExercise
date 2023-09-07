@@ -10,7 +10,10 @@ import java.util.Calendar
 data class EventStorage(
     @PrimaryKey val id: Int,
     @ColumnInfo(name = "title") val title: String,
-    @ColumnInfo(name = "city_id") val cityId: Int,
+    @ColumnInfo(name = "city_name") val cityName: String,
+    @ColumnInfo(name = "latitude") val latitude: Double,
+    @ColumnInfo(name = "longitude") val longitude: Double,
+    @ColumnInfo(name = "country") val country: String,
     @ColumnInfo(name = "address") val address: String,
     @ColumnInfo(name = "weather_id") val weatherId: Int,
     @ColumnInfo(name = "date") val date: Calendar,

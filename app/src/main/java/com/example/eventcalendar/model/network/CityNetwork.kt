@@ -1,8 +1,10 @@
 package com.example.eventcalendar.model.network
 
+import com.google.gson.annotations.SerializedName
+
 data class CityNetwork(
-    val name: String,
-    val latitude: Double,
-    val longitude: Double,
-    val country: String
+    @SerializedName("name") val name: String,
+    @SerializedName("lat") val latitude: Double,
+    @SerializedName("lon") val longitude: Double,
+    @SerializedName("country") val country: String
 )

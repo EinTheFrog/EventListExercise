@@ -17,11 +17,9 @@ import com.example.eventcalendar.databinding.FragmentEventTypeBinding
 import com.example.eventcalendar.model.EventType
 import com.example.eventcalendar.model.domain.EventDomain
 import com.example.eventcalendar.ui.EventCalendarApplication
-import com.example.eventcalendar.ui.viewmodels.eventList.EventListState
-import com.example.eventcalendar.ui.viewmodels.eventList.EventListViewModel
 import com.example.eventcalendar.ui.viewmodels.eventList.EventTypeState
 import com.example.eventcalendar.ui.viewmodels.eventList.EventTypeViewModel
-import com.example.eventcalendar.utils.constants.eventTypeKey
+import com.example.eventcalendar.utils.constants.EVENT_TYPE_KEY
 import kotlinx.coroutines.launch
 
 class EventTypeFragment: Fragment() {
@@ -87,7 +85,7 @@ class EventTypeFragment: Fragment() {
     }
 
     private fun getEvents() {
-        val eventTypeId = arguments?.getInt(eventTypeKey) ?: return
+        val eventTypeId = arguments?.getInt(EVENT_TYPE_KEY) ?: return
         val eventType = EventType.getEventTypeById(eventTypeId)
         viewModel.getEventsByType(eventType)
     }

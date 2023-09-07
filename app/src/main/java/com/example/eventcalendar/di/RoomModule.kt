@@ -14,7 +14,7 @@ class RoomModule {
         applicationContext,
         EventDatabase::class.java,
         "event-database"
-    ).build()
+    ).fallbackToDestructiveMigration().build()
 
     @Provides
     fun provideEventDao(db: EventDatabase) = db.eventDao()

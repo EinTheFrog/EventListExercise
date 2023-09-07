@@ -54,7 +54,7 @@ class EventInfoViewModel @Inject constructor(
                 is EventInfoState.Default -> {
                     val event = oldState.event
                     _state.value = EventInfoState.Loading
-                    eventRepository.deleteEvent(event.id)
+                    eventRepository.deleteEventById(event.id)
                     _state.value = EventInfoState.Finished
                 }
                 else -> {}
