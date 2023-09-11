@@ -1,4 +1,4 @@
-package com.example.eventcalendar.model.domain
+package com.example.eventcalendar.data.model.domain
 
 import java.util.Calendar
 

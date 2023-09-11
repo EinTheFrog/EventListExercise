@@ -14,8 +14,8 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.eventcalendar.databinding.FragmentEventTypeBinding
-import com.example.eventcalendar.model.EventType
-import com.example.eventcalendar.model.domain.EventDomain
+import com.example.eventcalendar.data.model.EventType
+import com.example.eventcalendar.data.model.domain.EventDomain
 import com.example.eventcalendar.ui.EventCalendarApplication
 import com.example.eventcalendar.ui.viewmodels.eventList.EventTypeState
 import com.example.eventcalendar.ui.viewmodels.eventList.EventTypeViewModel

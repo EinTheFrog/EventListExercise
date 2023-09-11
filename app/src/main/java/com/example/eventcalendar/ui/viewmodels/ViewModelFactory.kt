@@ -15,7 +15,6 @@ class ViewModelFactory @Inject constructor(
     eventInfoViewModelProvider: Provider<EventInfoViewModel>,
     eventTypeViewModelProvider: Provider<EventTypeViewModel>
 ) : ViewModelProvider.Factory {
-
     private val providers = mapOf<Class<*>, Provider<out ViewModel>>(
         EventListViewModel::class.java to eventListViewModelProvider,
         CreateEventViewModel::class.java to createEventViewModelProvider,
@@ -26,5 +25,4 @@ class ViewModelFactory @Inject constructor(
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         return providers[modelClass]?.get() as T
     }
-
 }

@@ -19,8 +19,8 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.example.eventcalendar.R
 import com.example.eventcalendar.databinding.FragmentEventInfoBinding
-import com.example.eventcalendar.model.EventType
-import com.example.eventcalendar.model.domain.EventDomain
+import com.example.eventcalendar.data.model.EventType
+import com.example.eventcalendar.data.model.domain.EventDomain
 import com.example.eventcalendar.ui.EventCalendarApplication
 import com.example.eventcalendar.ui.viewmodels.eventInfo.EventInfoState
 import com.example.eventcalendar.ui.viewmodels.eventInfo.EventInfoViewModel
@@ -56,7 +56,6 @@ class EventInfoFragment: Fragment() {
                 else -> false
             }
         }
-
     }
 
     override fun onAttach(context: Context) {

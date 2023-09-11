@@ -1,4 +1,4 @@
-package com.example.eventcalendar.model.network
+package com.example.eventcalendar.data.model.network
 
 import com.google.gson.annotations.SerializedName
 

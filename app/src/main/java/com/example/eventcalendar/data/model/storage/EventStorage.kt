@@ -1,14 +1,14 @@
-package com.example.eventcalendar.model.storage
+package com.example.eventcalendar.data.model.storage
 
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import com.example.eventcalendar.model.EventType
+import com.example.eventcalendar.data.model.EventType
 import java.util.Calendar
 
 @Entity(tableName = EventStorage.TABLE_NAME)
 data class EventStorage(
-    @PrimaryKey val id: Int,
+    @PrimaryKey(autoGenerate = true) val id: Int,
     @ColumnInfo(name = "title") val title: String,
     @ColumnInfo(name = "city_name") val cityName: String,
     @ColumnInfo(name = "latitude") val latitude: Double,

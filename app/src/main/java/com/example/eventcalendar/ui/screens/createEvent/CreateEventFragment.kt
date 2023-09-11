@@ -30,7 +30,8 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.example.eventcalendar.R
 import com.example.eventcalendar.databinding.FragmentCreateEventBinding
-import com.example.eventcalendar.model.EventType
+import com.example.eventcalendar.data.model.EventType
+import com.example.eventcalendar.data.model.domain.EventDomain
 import com.example.eventcalendar.ui.EventCalendarApplication
 import com.example.eventcalendar.ui.viewmodels.createEvent.CreateEventIntent
 import com.example.eventcalendar.ui.viewmodels.createEvent.CreateEventState
@@ -90,7 +91,6 @@ class CreateEventFragment: Fragment() {
         binding.eventDateButton.setOnClickListener { showPickDateDialog() }
         viewModel.initState(args.eventId, EventType.getEventTypeById(args.eventTypeId))
         subscribeToStateUpdates()
-        setInputListeners()
     }
 
     override fun onDestroyView() {
@@ -160,8 +160,12 @@ class CreateEventFragment: Fragment() {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.state.collect { state ->
                     when(state) {
-                        is CreateEventState.Default -> {
-                            updateInputs(state)
+                        is CreateEventState.Initial -> {
+                            if (state.event != null) {
+                                updateInputs(state.event)
+                            }
+                        }
+                        is CreateEventState.Editing -> {
                             val suggestions = state.suggestedCities.map { it.name }
                             updateCitySuggestions(suggestions)
                         }
@@ -186,13 +190,12 @@ class CreateEventFragment: Fragment() {
         }
     }
 
-    private fun updateInputs(createEventState: CreateEventState.Default) {
-        binding.eventNameInput.setTextIfNotInFocus(createEventState.eventName)
-        binding.eventDateButton.text =
-            createEventState.eventDate?.toReadableString() ?: getString(R.string.event_date_hint)
-        binding.eventCitySearchView.setQueryIfNotInFocus(createEventState.eventCity?.name)
-        binding.eventAddressInput.setTextIfNotInFocus(createEventState.eventAddress)
-        binding.eventDescriptionInput.setTextIfNotInFocus(createEventState.eventDescription)
+    private fun updateInputs(event: EventDomain) {
+        binding.eventNameInput.setText(event.title)
+        binding.eventDateButton.text = event.date.toReadableString() ?: getString(R.string.event_date_hint)
+        binding.eventCitySearchView.setQuery(event.city.name, true)
+        binding.eventAddressInput.setText(event.address)
+        binding.eventDescriptionInput.setText(event.description)
     }
 
     private fun updateCitySuggestions(suggestions: List<String>) {
@@ -205,54 +208,9 @@ class CreateEventFragment: Fragment() {
         cursorAdapter.changeCursor(cursor)
     }
 
-    private fun EditText.setTextIfNotInFocus(text: String) {
-        if (hasFocus()) return
-        setText(text)
-    }
-
-    private fun SearchView.setQueryIfNotInFocus(text: String?) {
-        if (hasFocus()) return
-        setQuery(text, true)
-    }
-
     private fun saveEvent() {
         updateInputState()
         viewModel.saveEvent()
-    }
-
-    private fun setInputListeners() {
-        binding.eventNameInput.onFocusChangeListener =
-            OnFocusChangeListener { v, hasFocus ->
-                if (hasFocus) return@OnFocusChangeListener
-                val editText = v as EditText
-                viewModel.handleUserIntent(CreateEventIntent.UpdateName(editText.text.toString()))
-            }
-        binding.eventCitySearchView.setOnQueryTextFocusChangeListener { v, hasFocus ->
-            if (hasFocus) return@setOnQueryTextFocusChangeListener
-            val searchView = v as SearchView
-            setRealSearchViewQuery(searchView)
-        }
-        binding.eventAddressInput.onFocusChangeListener =
-            OnFocusChangeListener { v, hasFocus ->
-                if (hasFocus) return@OnFocusChangeListener
-                val editText = v as EditText
-                viewModel.handleUserIntent(CreateEventIntent.UpdateAddress(editText.text.toString()))
-            }
-        binding.eventDescriptionInput.onFocusChangeListener =
-            OnFocusChangeListener { v, hasFocus ->
-                if (hasFocus) return@OnFocusChangeListener
-                val editText = v as EditText
-                viewModel.handleUserIntent(CreateEventIntent.UpdateDescription(editText.text.toString()))
-            }
-    }
-
-    private fun setRealSearchViewQuery(searchView: SearchView) {
-        val state = viewModel.state.value
-        if (state is CreateEventState.Default) {
-            searchView.setQuery(state.eventCity?.name, true)
-        } else if (state is CreateEventState.IncorrectInput) {
-            searchView.setQuery(state.eventCity?.name, true)
-        }
     }
 
     private fun updateInputState() {

@@ -1,10 +1,10 @@
-package com.example.eventcalendar.domain
+package com.example.eventcalendar.data.domain
 
 import android.content.res.Resources.NotFoundException
-import com.example.eventcalendar.model.EventType
-import com.example.eventcalendar.model.domain.CityDomain
-import com.example.eventcalendar.model.domain.EventDomain
-import com.example.eventcalendar.model.domain.WeatherDomain
+import com.example.eventcalendar.data.model.EventType
+import com.example.eventcalendar.data.model.domain.CityDomain
+import com.example.eventcalendar.data.model.domain.EventDomain
+import com.example.eventcalendar.data.model.domain.WeatherDomain
 import kotlinx.coroutines.withContext
 import java.util.Calendar
 import javax.inject.Inject
@@ -46,34 +46,6 @@ class EventRepositoryMock @Inject constructor(
     override suspend fun saveEvent(event: EventDomain) = withContext(coroutineContext) {
         eventList.add(event)
         return@withContext Result.success(Unit)
-    }
-
-    override suspend fun updateEvent(event: EventDomain) = withContext(coroutineContext) {
-        for (i in eventList.indices) {
-            val oldEvent = eventList[i]
-            if (oldEvent.id == event.id) {
-                eventList[i] = event
-                return@withContext Result.success(Unit)
-            }
-        }
-        return@withContext Result.failure(NotFoundException("Event not found"))
-    }
-
-    override suspend fun generateEventId() = withContext(coroutineContext) {
-        val lastId = if (eventList.isEmpty()) 0 else eventList.last().id
-        return@withContext Result.success(lastId + 1)
-    }
-
-    override suspend fun changeEventType(eventId: Int, eventType: EventType) = withContext(coroutineContext) {
-        for (i in eventList.indices) {
-            val event = eventList[i]
-            if (event.id == eventId) {
-                val newEvent = event.copy(eventType = eventType)
-                eventList[i] = newEvent
-                return@withContext Result.success(newEvent)
-            }
-        }
-        return@withContext Result.failure(NotFoundException("Event not found"))
     }
 
     override suspend fun deleteEventById(eventId: Int) = withContext(coroutineContext) {

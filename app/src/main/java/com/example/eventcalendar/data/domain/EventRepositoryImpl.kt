@@ -1,10 +1,11 @@
-package com.example.eventcalendar.domain
+package com.example.eventcalendar.data.domain
 
+import com.example.eventcalendar.data.model.EventType
+import com.example.eventcalendar.data.model.domain.CityDomain
+import com.example.eventcalendar.data.model.domain.EventDomain
 import com.example.eventcalendar.data.network.EventApi
-import com.example.eventcalendar.model.domain.EventDomain
 import com.example.eventcalendar.data.storage.EventDao
-import com.example.eventcalendar.model.EventType
-import com.example.eventcalendar.model.domain.CityDomain
+import com.example.eventcalendar.utils.annotations.IO
 import com.example.eventcalendar.utils.constants.API_KEY
 import com.example.eventcalendar.utils.constants.CITY_SUGGESTIONS_SIZE
 import com.example.eventcalendar.utils.mappers.CityMapper
@@ -16,13 +17,12 @@ import kotlin.coroutines.CoroutineContext
 
 @Singleton
 class EventRepositoryImpl @Inject constructor(
-    private val coroutineContext: CoroutineContext,
+    @IO private val coroutineContext: CoroutineContext,
     private val eventApi: EventApi,
     private val eventDao: EventDao,
     private val eventMapper: EventMapper,
     private val cityMapper: CityMapper
 ): EventRepository {
-
     override suspend fun getEvents(): Result<List<EventDomain>> = withContext(coroutineContext) {
         try {
             val storageEvents = eventDao.getAllEvents()
@@ -47,47 +47,6 @@ class EventRepositoryImpl @Inject constructor(
         try {
             eventDao.insertEvent(eventMapper.domainToStorage(event))
             return@withContext Result.success(Unit)
-        } catch (e: Throwable) {
-            return@withContext Result.failure(e)
-        }
-    }
-
-    override suspend fun updateEvent(event: EventDomain): Result<Unit> = withContext(coroutineContext) {
-        try {
-            val oldEvent = eventDao.getEventById(event.id)
-            eventDao.deleteEvent(oldEvent)
-            val newEvent = eventMapper.domainToStorage(event)
-            eventDao.insertEvent(newEvent)
-            return@withContext Result.success(Unit)
-        } catch (e: Throwable) {
-            return@withContext Result.failure(e)
-        }
-    }
-
-    override suspend fun generateEventId(): Result<Int> = withContext(coroutineContext) {
-        try {
-            var maxId = 0
-            val storageEvents = eventDao.getAllEvents()
-            for (storageEvent in storageEvents) {
-                if (storageEvent.id > maxId) {
-                    maxId = storageEvent.id
-                }
-            }
-            val result = maxId + 1
-            return@withContext Result.success(result)
-        } catch (e: Throwable) {
-            return@withContext Result.failure(e)
-        }
-    }
-
-    override suspend fun changeEventType(eventId: Int, eventType: EventType): Result<EventDomain> = withContext(coroutineContext) {
-        try {
-            val oldEvent = eventDao.getEventById(eventId)
-            eventDao.deleteEvent(oldEvent)
-            val newEvent = oldEvent.copy(eventType = eventType)
-            eventDao.insertEvent(newEvent)
-            val result = eventMapper.storageToDomain(newEvent)
-            return@withContext Result.success(result)
         } catch (e: Throwable) {
             return@withContext Result.failure(e)
         }

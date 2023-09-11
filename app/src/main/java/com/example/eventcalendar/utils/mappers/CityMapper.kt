@@ -1,7 +1,7 @@
 package com.example.eventcalendar.utils.mappers
 
-import com.example.eventcalendar.model.domain.CityDomain
-import com.example.eventcalendar.model.network.CityNetwork
+import com.example.eventcalendar.data.model.domain.CityDomain
+import com.example.eventcalendar.data.model.network.CityNetwork
 import javax.inject.Inject
 import javax.inject.Singleton
 

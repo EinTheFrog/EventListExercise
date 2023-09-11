@@ -2,8 +2,8 @@ package com.example.eventcalendar.ui.viewmodels.eventList
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.eventcalendar.domain.EventRepository
-import com.example.eventcalendar.model.EventType
+import com.example.eventcalendar.data.domain.EventRepository
+import com.example.eventcalendar.data.model.EventType
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow

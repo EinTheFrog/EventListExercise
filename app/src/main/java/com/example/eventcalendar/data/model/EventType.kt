@@ -1,4 +1,4 @@
-package com.example.eventcalendar.model
+package com.example.eventcalendar.data.model
 
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes

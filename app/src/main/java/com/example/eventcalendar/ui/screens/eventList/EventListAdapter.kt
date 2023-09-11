@@ -11,7 +11,7 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.RecyclerView
 import com.example.eventcalendar.R
 import com.example.eventcalendar.databinding.ItemEventBinding
-import com.example.eventcalendar.model.domain.EventDomain
+import com.example.eventcalendar.data.model.domain.EventDomain
 import com.example.eventcalendar.utils.extensions.toShortString
 import java.util.Calendar
 

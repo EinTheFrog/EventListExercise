@@ -1,6 +1,6 @@
 package com.example.eventcalendar.ui.viewmodels.eventInfo
 
-import com.example.eventcalendar.model.domain.EventDomain
+import com.example.eventcalendar.data.model.domain.EventDomain
 
 sealed class EventInfoState {
     object Loading: EventInfoState()

@@ -1,4 +1,4 @@
-package com.example.eventcalendar.model.storage
+package com.example.eventcalendar.data.model.storage
 
 import androidx.room.ColumnInfo
 import androidx.room.Entity

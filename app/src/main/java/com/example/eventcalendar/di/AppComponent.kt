@@ -1,7 +1,7 @@
 package com.example.eventcalendar.di
 
 import android.content.Context
-import com.example.eventcalendar.domain.EventRepository
+import com.example.eventcalendar.data.domain.EventRepository
 import com.example.eventcalendar.ui.screens.createEvent.CreateEventFragment
 import com.example.eventcalendar.ui.screens.eventList.EventTypeFragment
 import com.example.eventcalendar.ui.viewmodels.ViewModelFactory
@@ -10,7 +10,7 @@ import dagger.Component
 import javax.inject.Singleton
 
 @Singleton
-@Component(modules = [NetworkModule::class, RoomModule::class, RepositoryModule::class])
+@Component(modules = [NetworkModule::class, RoomModule::class, RepositoryModule::class, CoroutineContextModule::class])
 interface AppComponent {
 
     fun inject(createEventFragment: CreateEventFragment)

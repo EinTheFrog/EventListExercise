@@ -1,6 +1,6 @@
-package com.example.eventcalendar.model.domain
+package com.example.eventcalendar.data.model.domain
 
-import com.example.eventcalendar.model.EventType
+import com.example.eventcalendar.data.model.EventType
 import java.util.Calendar
 
 data class EventDomain(

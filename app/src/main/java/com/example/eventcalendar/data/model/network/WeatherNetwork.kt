@@ -1,4 +1,4 @@
-package com.example.eventcalendar.model.network
+package com.example.eventcalendar.data.model.network
 
 data class WeatherNetwork(
     val temp: Double,

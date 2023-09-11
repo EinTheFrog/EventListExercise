@@ -1,9 +1,9 @@
 package com.example.eventcalendar.utils.mappers
 
 import com.example.eventcalendar.data.storage.EventDao
-import com.example.eventcalendar.model.domain.CityDomain
-import com.example.eventcalendar.model.domain.EventDomain
-import com.example.eventcalendar.model.storage.EventStorage
+import com.example.eventcalendar.data.model.domain.CityDomain
+import com.example.eventcalendar.data.model.domain.EventDomain
+import com.example.eventcalendar.data.model.storage.EventStorage
 import javax.inject.Inject
 import javax.inject.Singleton
 

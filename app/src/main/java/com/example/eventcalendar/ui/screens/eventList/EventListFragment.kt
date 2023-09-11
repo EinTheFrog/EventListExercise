@@ -20,7 +20,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.viewpager2.widget.ViewPager2
 import com.example.eventcalendar.R
 import com.example.eventcalendar.databinding.FragmentEventListBinding
-import com.example.eventcalendar.model.EventType
+import com.example.eventcalendar.data.model.EventType
 import com.example.eventcalendar.ui.EventCalendarApplication
 import com.example.eventcalendar.ui.viewmodels.eventList.EventListState
 import com.example.eventcalendar.ui.viewmodels.eventList.EventListViewModel

@@ -1,7 +1,7 @@
 package com.example.eventcalendar.utils.mappers
 
-import com.example.eventcalendar.model.domain.WeatherDomain
-import com.example.eventcalendar.model.storage.WeatherStorage
+import com.example.eventcalendar.data.model.domain.WeatherDomain
+import com.example.eventcalendar.data.model.storage.WeatherStorage
 import javax.inject.Inject
 import javax.inject.Singleton
 
