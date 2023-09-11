@@ -35,6 +35,7 @@ class CreateEventViewModel @Inject constructor(
             } else {
                 _state.value = CreateEventState.Editing(
                     suggestedCities = emptyList(),
+                    selectedCity = null,
                     selectedDate = null
                 )
             }
@@ -89,9 +90,10 @@ class CreateEventViewModel @Inject constructor(
                     }
                 }
             }
-            is CreateEventIntent.SelectCity -> oldState.copy(
-                selectedCity = intent.city
-            )
+            is CreateEventIntent.SelectCity -> {
+                val city = oldState.suggestedCities.find { it. }
+                oldState.copy(selectedCity = intent.city)
+            }
             is CreateEventIntent.SaveEvent -> {
                 if (oldState.selectedDate == null && oldState.selectedCity == null) {
                     CreateEventState.IncorrectInput()

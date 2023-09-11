@@ -6,15 +6,12 @@ import android.database.Cursor
 import android.database.MatrixCursor
 import android.os.Bundle
 import android.provider.BaseColumns
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
-import android.view.View.OnFocusChangeListener
 import android.view.ViewGroup
-import android.widget.EditText
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
@@ -31,15 +28,14 @@ import androidx.navigation.fragment.navArgs
 import com.example.eventcalendar.R
 import com.example.eventcalendar.databinding.FragmentCreateEventBinding
 import com.example.eventcalendar.data.model.EventType
+import com.example.eventcalendar.data.model.domain.CityDomain
 import com.example.eventcalendar.data.model.domain.EventDomain
 import com.example.eventcalendar.ui.EventCalendarApplication
 import com.example.eventcalendar.ui.viewmodels.createEvent.CreateEventIntent
 import com.example.eventcalendar.ui.viewmodels.createEvent.CreateEventState
 import com.example.eventcalendar.ui.viewmodels.createEvent.CreateEventViewModel
 import com.example.eventcalendar.utils.extensions.toReadableString
-import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.launch
-import kotlin.math.roundToInt
 
 class CreateEventFragment: Fragment() {
     private lateinit var binding: FragmentCreateEventBinding
@@ -56,7 +52,7 @@ class CreateEventFragment: Fragment() {
         override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
             return when(menuItem.itemId) {
                 R.id.confirm_icon -> {
-                    saveEvent()
+                    viewModel()
                     true
                 }
                 else -> false
@@ -142,7 +138,7 @@ class CreateEventFragment: Fragment() {
                 val columnIndex = cursor.getColumnIndex(SearchManager.SUGGEST_COLUMN_TEXT_1)
                 if (columnIndex < 0) return true
                 val suggestion = cursor.getString(columnIndex)
-                viewModel.handleUserIntent(CreateEventIntent.UpdateCity(suggestion))
+                viewModel.handleUserIntent(CreateEventIntent.SelectCity(suggestion))
                 binding.eventCitySearchView.clearFocus()
                 return true
             }
@@ -161,13 +157,10 @@ class CreateEventFragment: Fragment() {
                 viewModel.state.collect { state ->
                     when(state) {
                         is CreateEventState.Initial -> {
-                            if (state.event != null) {
-                                updateInputs(state.event)
-                            }
+                            setInputs(state.event)
                         }
                         is CreateEventState.Editing -> {
-                            val suggestions = state.suggestedCities.map { it.name }
-                            updateCitySuggestions(suggestions)
+                            updateCitySuggestions(state.suggestedCities)
                         }
                         is CreateEventState.IncorrectInput -> {
                             val toast = Toast(requireContext())
@@ -190,36 +183,19 @@ class CreateEventFragment: Fragment() {
         }
     }
 
-    private fun updateInputs(event: EventDomain) {
+    private fun setInputs(event: EventDomain) {
         binding.eventNameInput.setText(event.title)
-        binding.eventDateButton.text = event.date.toReadableString() ?: getString(R.string.event_date_hint)
+        binding.eventDateButton.text = event.date.toReadableString()
         binding.eventCitySearchView.setQuery(event.city.name, true)
         binding.eventAddressInput.setText(event.address)
         binding.eventDescriptionInput.setText(event.description)
     }
 
-    private fun updateCitySuggestions(suggestions: List<String>) {
+    private fun updateCitySuggestions(suggestions: List<CityDomain>) {
         val cursor = MatrixCursor(arrayOf(BaseColumns._ID, SearchManager.SUGGEST_COLUMN_TEXT_1))
         suggestions.forEachIndexed { index, suggestion ->
-            if (suggestions[index].contains(cityQuery, false)) {
-                cursor.addRow(arrayOf(index, suggestion))
-            }
+            cursor.addRow(arrayOf(index, suggestion))
         }
         cursorAdapter.changeCursor(cursor)
     }
-
-    private fun saveEvent() {
-        updateInputState()
-        viewModel.saveEvent()
-    }
-
-    private fun updateInputState() {
-        viewModel.handleUserIntent(
-            CreateEventIntent.UpdateTextInputs(
-            newName = binding.eventNameInput.text.toString(),
-            newAddress = binding.eventAddressInput.text.toString(),
-            newDescription = binding.eventDescriptionInput.text.toString()
-        ))
-    }
-
 }
